@@ -1,4 +1,3 @@
-//#include <sys.h>
 #include <math.h>
 #include "filter.h"
 
@@ -28,13 +27,9 @@ uint32 Bubble_Filter(uint32 *value)
 
 /*
 其中p的初值可以随便取，但是不能为0（为0的话卡尔曼滤波器就认为已经是最优滤波器了） 
-
 q,r的值需要我们试出来，讲白了就是(买的破温度计有多破，以及你的超人力有多强)
-
 q参数调整滤波后的曲线与实测曲线的相近程度，q越大越接近。
-
 r参数调滤波后的曲线平滑程度，r越大越平滑。 
-
 */
 float KalmanFilter(float *Original_Data) 
 {

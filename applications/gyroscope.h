@@ -139,16 +139,15 @@ struct SQ
 };
 
 /*-----------------MSH命令函数----------------*/
-
 /* Get时间  time */
 void print_time(void);
 
+/*-----------------初始化函数----------------*/
+int JY901_Init(void);
+
 /*-----------------应用函数----------------*/
-
 void JY901_Convert(JY901_Type *pArr);
-
 void CopeSerial2Data(unsigned char Data);
-
 //void get_speed(float *acc,float *speed);/* 粗略 获取轴速度 */
 //void get_zspeed(void);
 

@@ -1,3 +1,6 @@
+#define LOG_TAG "spl1301"
+
+#include "../easylogger/inc/elog.h"
 #include "drv_spl1301.h"
 
 #include <stdio.h>
@@ -25,19 +28,20 @@ void spl1301_get_calib_param(void);
  Calls: 
  Called By: 
 *****************************************************************************/
-int spl1301_init(char *device)
+int spl1301_init(void)
 {
     spl1301_fd = 0;
-    spl1301_fd = wiringPiI2CSetupInterface(device, HW_ADR);
-    if (Nano_DEBUG)
+    spl1301_fd = wiringPiI2CSetupInterface(spl1301_I2C, HW_ADR);
+
+    log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
+	log_d("spl1301_fd:%d", spl1301_fd);
+
+    if (spl1301_fd < 0)
     {
-        printf("spl1301_fd:%d\n", spl1301_fd);
+        log_e("spl1301 init failed");
+        return -1;
     }
-    if (spl1301_fd == 0)
-    {
-        printf("error!!!\nspl1301 init failed!!!\n");
-        return 0;
-    }
+    
     p_spl1301 = &spl1301; /* read Chip Id */
     p_spl1301->i32rawPressure = 0;
     p_spl1301->i32rawTemperature = 0;

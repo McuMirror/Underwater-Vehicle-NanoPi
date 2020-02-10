@@ -2,59 +2,54 @@
  * @Description: 
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime : 2020-02-04 13:21:02
+ * @LastEditTime : 2020-02-10 11:05:31
  * @LastEditors  : chenxi
  */
+#define LOG_TAG "main"
+
+#include "elog.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <pthread.h>
 
 #include "DataType.h"
 
-#include "..//applications//gyroscope.h"
-#include "..//applications//IIC_PWM.h"
-#include "..//applications//my_debug.h"
-#include "..//drivers//drv_spl1301.h"
-#include "..//drivers//drv_oled.h"
-#include "..//applications//led.h"
-#include "..//applications//ioDevices.h"
+#include "../applications/gyroscope.h"
+#include "../applications/I2C_PWM.h"
+#include "../applications/led.h"
+#include "../applications/ioDevices.h"
+#include "../applications/sensor.h"
+#include "../drivers/drv_spl1301.h"
+#include "../drivers/drv_olcd.h"
 
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <wiringPiI2C.h>
 #include <wiringPiSPI.h>
 
-extern Sensor_Type Sensor;
-
-int JY901_Serial()
+void easyloggerInit(void)
 {
-  int fd;
-
-  if ((fd = serialOpen("/dev/ttyS2", 115200)) < 0)
-  {
-    fprintf(stderr, "Unable to open serial device: %s\n", strerror(errno));
-    return 1;
-  }
-  if (Nano_DEBUG)
-  {
-    printf("JY901_Serial fd:%d\n", fd);
-  }
-
-  while (1)
-  {
-    delay(1000);
-    while (serialDataAvail(fd))
-    {
-      CopeSerial2Data((uint8)serialGetchar(fd));
-      // printf("%x", serialGetchar(fd));
-    }
-  }
-  return 0;
+  setbuf(stdout, NULL);
+  /* initialize EasyLogger */
+  elog_init();
+  /* set EasyLogger log format */
+  elog_set_fmt(ELOG_LVL_ASSERT, ELOG_FMT_ALL);
+  elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+  elog_set_fmt(ELOG_LVL_DEBUG, ELOG_FMT_ALL & ~ELOG_FMT_FUNC);
+  elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_ALL & ~ELOG_FMT_FUNC);
+#ifdef ELOG_COLOR_ENABLE
+  elog_set_text_color_enabled(true);
+#endif
+  /* start EasyLogger */
+  elog_start();
 }
 
-void I2C_PWM_Test()
+void *I2C_PWM_callback_fun(void *arg)
 {
-  int fd = I2C_PWM_Init("/dev/i2c-0", I2C_PWM_Addr);
+  I2C_PWM_Init();
   // I2C_PWM_SetPWMFreq(50.0);
 
   int i = 0;
@@ -67,51 +62,53 @@ void I2C_PWM_Test()
       i = 0;
     delay(1000);
   }
+  return NULL;
 }
 
 void I2C_spl1301_Test()
 {
-  spl1301_init("/dev/i2c-1");
+  spl1301_init();
   while (1)
   {
     spl1301_get_raw_temp();
-    printf("temperature:%f\n", get_spl1301_temperature());
+    log_d("temperature:%f", get_spl1301_temperature());
     spl1301_get_raw_pressure();
-    printf("pressure:%f\n", get_spl1301_pressure());
-    printf("\n");
+    log_d("pressure:%f", get_spl1301_pressure());
     delay(1000);
   }
 }
 
-void SPI_Test()
-{
-  int fd;
-  fd = wiringPiSPISetupMode(1, 1000000, 1); //100MHz
-  if (Nano_DEBUG)
-  {
-    printf("SPI fd:%d\n", fd);
-  }
-
-  char data[] = {0, 0x8A, 0, 0, 0, 0x8A, 0, 0, 0, 0};
-  printf("write %d\n", wiringPiSPIDataRW(1, data, 8));
-  for (int i = 0; i < 9; i++)
-  {
-    printf("%x ", data[i]);
-  }
-  printf("\n");
-}
-
 int main()
 {
-  printf("\n");
-
+  easyloggerInit();
   if (wiringPiSetup() == -1)
   {
-    fprintf(stdout, "Unable to start wiringPi: %s\n", strerror(errno));
+    log_e("Unable to start wiringPi: %s", strerror(errno));
     return 1;
   }
 
-  // JY901_Serial();
+  // OLCD_Init();
+  // OLCD_ShowString(0, 0, (uint8 *)"hello", 16);
+  // OLCD_Refresh_Gram();
+
+  // pthread_t I2C_PWM_tid;
+  // // if (pthread_create(&I2C_PWM_tid, NULL, I2C_PWM_callback_fun, NULL) == -1)
+  // {
+  //   log_e("I2C_PWM_thread create error!");
+  //   return 1;
+  // }
+  // if (pthread_detach(I2C_PWM_tid))
+  // {
+  //   log_w("I2C_PWM_thread detach failed...");
+  //   return -2;
+  // }
+
+  sensor_thread_init();
+  while (1)
+  {
+    sleep(2);
+    print_sensor_info();
+  }
 
   return 0;
 }

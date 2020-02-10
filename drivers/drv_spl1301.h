@@ -2,16 +2,17 @@
  * @Description: 
  * @Author: chenxi
  * @Date: 2020-01-14 16:52:11
- * @LastEditTime : 2020-01-14 20:41:46
+ * @LastEditTime : 2020-02-09 15:54:32
  * @LastEditors  : chenxi
  */
 #ifndef SPL1301_H
 #define SPL1301_H
 
 #include "..//user//DataType.h"
-#include "..//applications//my_debug.h"
 
+#define spl1301_I2C "/dev/i2c-1"
 #define HW_ADR 0x77
+
 #define CONTINUOUS_PRESSURE 1
 #define CONTINUOUS_TEMPERATURE 2
 #define CONTINUOUS_P_AND_T 3
@@ -41,7 +42,7 @@ struct spl1301_t
     int32 i32kT;
 };
 //初始化调用
-int spl1301_init(char *device);
+int spl1301_init(void);
 //设置特定传感器的采样率和每秒过采样率
 void spl1301_rateset(uint8 iSensor, uint8 u8SmplRate, uint8 u8OverSmpl);
 //开始一次温度测量

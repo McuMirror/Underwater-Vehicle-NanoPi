@@ -7,6 +7,7 @@
  */
 #define LOG_TAG "gyro"
 
+#include "../easylogger/inc/elog.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -14,7 +15,11 @@
 
 #include "gyroscope.h"
 
+#include <wiringPi.h>
+#include <wiringSerial.h>
+
 extern Sensor_Type Sensor;
+static int JY901_fd = 0;
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -40,6 +45,23 @@ uint8 gyroscope_baud_array[5] = {0xFF, 0xAA, 0x04, 0x02, 0x00};	//0x06 - 115200
 short Compass_Offset_Angle = 0;									   //指南针补偿角度   由于受到板子磁场干扰，需要加一个补偿角度  -360 ~ +360
 
 /*----------------------- Function Implement --------------------------------*/
+
+int JY901_Init(void)
+{
+	if ((JY901_fd = serialOpen("/dev/ttyS2", 115200)) < 0)
+	{
+		log_e("Unable to open serial device: %s", strerror(errno));
+		return -1;
+	}
+	log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
+	log_d("JY901_fd:%d", JY901_fd);
+
+	if (JY901_fd < 0)
+	{
+		log_e("JY901 init failed");
+	}
+	return JY901_fd;
+}
 
 //CopeSerialData为串口2中断调用函数，串口每收到一个数据，调用一次这个函数。
 void CopeSerial2Data(uint8 Data)
@@ -106,20 +128,7 @@ void CopeSerial2Data(uint8 Data)
 		RxCount = 0; //清空缓存区
 		RxCheck = 0; //校验位清零
 
-		JY901_Convert(&Sensor.JY901);
-		// system("clear");
-		if (RxBuffer[1] == 0x51)
-		{
-			printf("acc:    x:%f   y:%f   z:%f\n", Sensor.JY901.Acc.x, Sensor.JY901.Acc.y, Sensor.JY901.Acc.z);
-		}
-		if (RxBuffer[1] == 0x52)
-		{
-			printf("Gyro:   x:%f   y:%f   z:%f\n", Sensor.JY901.Gyro.x, Sensor.JY901.Gyro.y, Sensor.JY901.Gyro.z);
-		}
-		if (RxBuffer[1] == 0x53)
-		{
-			printf("Euler:  Roll:%f   Pitch:%f   Yaw:%f\n", Sensor.JY901.Euler.Roll, Sensor.JY901.Euler.Pitch, Sensor.JY901.Euler.Yaw);
-		}
+		JY901_Convert(&Sensor.JY901); // JY901数据转换
 	}
 	else
 	{				 //错误清零
@@ -133,7 +142,6 @@ void CopeSerial2Data(uint8 Data)
 /* Sensor.JY901 数据转换 */
 void JY901_Convert(JY901_Type *pArr)
 {
-
 	pArr->Acc.x = (float)stcAcc.a[0] / 2048; //32768*16
 	pArr->Acc.y = (float)stcAcc.a[1] / 2048;
 	pArr->Acc.z = (float)stcAcc.a[2] / 2048;

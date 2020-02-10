@@ -1,3 +1,6 @@
+#define LOG_TAG "I2C_PWM"
+
+#include "../easylogger/inc/elog.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -7,8 +10,7 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 
-#include "IIC_PWM.h"
-#include "my_debug.h"
+#include "I2C_PWM.h"
 
 static int i2c_pwm_fd;
 
@@ -17,17 +19,19 @@ static int i2c_pwm_fd;
  * @param : 
  * @return: 文件描述符 i2c_pwm_fd
  */
-int I2C_PWM_Init(char *device, int devId)
+int I2C_PWM_Init(void)
 {
+  log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
   // I2C0_OE，即 GPIOG11 低电平使能
-  pinMode(7, OUTPUT);
-  digitalWrite(7, LOW);
+  pinMode(I2C0_OE, OUTPUT);
+  digitalWrite(I2C0_OE, LOW);
 
-  i2c_pwm_fd = wiringPiI2CSetupInterface(device, devId);
-  if (Nano_DEBUG)
+  i2c_pwm_fd = wiringPiI2CSetupInterface(I2C_PWM_Device, I2C_PWM_Addr);
+  log_d("i2c_pwm_fd:%d", i2c_pwm_fd);
+
+  if (i2c_pwm_fd < 0)
   {
-    printf("[%s %s] %s: %s: %d\n", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
-    printf("i2c_pwm_fd:%d\n", i2c_pwm_fd);
+    log_e("I2C_PWM_Init failed");
   }
 
   I2C_PWM_Reset();
@@ -47,12 +51,10 @@ void I2C_PWM_SetPWMFreq(float freq)
   prescaleval /= freq;
   prescaleval -= 1;
   uint16 prescale = floor(prescaleval + 0.5);
-  if (Nano_DEBUG)
-  {
-    printf("[%s %s] %s: %s: %d\n", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
-    printf("Estimated pre-scale: %f\n", prescaleval);
-    printf("Final pre-scale: %d\n", prescale);
-  }
+
+  log_i("[%s %s] %s: %s: %d", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
+  log_d("Estimated pre-scale: %f", prescaleval);
+  log_d("Final pre-scale: %d", prescale);
 
   uint16 oldmode = wiringPiI2CReadReg8(i2c_pwm_fd, PCA9685_MODE1);
   uint16 newmode = (oldmode & 0x7F) | 0x10;                     // sleep
@@ -73,11 +75,7 @@ void I2C_PWM_SetPWM(uint16 num, uint32 on, uint32 off)
   wiringPiI2CWriteReg8(i2c_pwm_fd, reg + 2, off);
   wiringPiI2CWriteReg8(i2c_pwm_fd, reg + 3, off >> 8);
 
-  if (Nano_DEBUG)
-  {
-    printf("[%s %s] %s: %s: %d\n", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
-    printf("SetPWM %2d, on %4d, off %4d\n", num, on, off);
-  }
+  log_d("SetPWM %2d, on %4d, off %4d", num, on, off);
 }
 
 // Sets pin without having to deal with on/off tick placement and properly handles
