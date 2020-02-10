@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime : 2020-02-10 11:05:31
+ * @LastEditTime : 2020-02-10 16:23:13
  * @LastEditors  : chenxi
  */
 #define LOG_TAG "main"
@@ -15,18 +15,10 @@
 
 #include "DataType.h"
 
-#include "../applications/gyroscope.h"
 #include "../applications/I2C_PWM.h"
-#include "../applications/led.h"
-#include "../applications/ioDevices.h"
 #include "../applications/sensor.h"
-#include "../drivers/drv_spl1301.h"
-#include "../drivers/drv_olcd.h"
 
 #include <wiringPi.h>
-#include <wiringSerial.h>
-#include <wiringPiI2C.h>
-#include <wiringPiSPI.h>
 
 void easyloggerInit(void)
 {
@@ -65,19 +57,6 @@ void *I2C_PWM_callback_fun(void *arg)
   return NULL;
 }
 
-void I2C_spl1301_Test()
-{
-  spl1301_init();
-  while (1)
-  {
-    spl1301_get_raw_temp();
-    log_d("temperature:%f", get_spl1301_temperature());
-    spl1301_get_raw_pressure();
-    log_d("pressure:%f", get_spl1301_pressure());
-    delay(1000);
-  }
-}
-
 int main()
 {
   easyloggerInit();
@@ -87,12 +66,8 @@ int main()
     return 1;
   }
 
-  // OLCD_Init();
-  // OLCD_ShowString(0, 0, (uint8 *)"hello", 16);
-  // OLCD_Refresh_Gram();
-
   // pthread_t I2C_PWM_tid;
-  // // if (pthread_create(&I2C_PWM_tid, NULL, I2C_PWM_callback_fun, NULL) == -1)
+  // if (pthread_create(&I2C_PWM_tid, NULL, I2C_PWM_callback_fun, NULL) == -1)
   // {
   //   log_e("I2C_PWM_thread create error!");
   //   return 1;

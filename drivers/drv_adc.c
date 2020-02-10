@@ -19,39 +19,34 @@
 static int adc_fd = 0;
 
 uint8 i = 0;
-float voltage = 0.0f;
-uint32 adc_value[10] = {0};
-/* 冒泡 get电压 */
+float voltage1 = 0.0f;
+uint32 adc1_value[10] = {0};
+/* 冒泡 get 电压 */
 float get_voltage_value(void)
 {
     for (i = 0; i < 10; i++)
     {
-        adc_value[i] = get_adc1(); //采样
+        adc1_value[i] = get_adc1(); //采样
     }
-    voltage = Bubble_Filter(adc_value) * LSB / 1000 / 1000;
+    voltage1 = Bubble_Filter(adc1_value) * LSB / 1000 / 1000;
 
-    return voltage;
+    return voltage1;
 }
 
 uint8 j = 0;
-uint32 adc1_value[10] = {0};
-float voltage1 = 0.0f, current = 0.0f;
+uint32 adc0_value[10] = {0};
+float voltage0 = 0.0f, current = 0.0f;
 
-/* 冒泡 get电流 */
+/* 冒泡 get 电流 */
 float get_current_value(void)
 {
-    // TODO
-
-    // for (j = 0; j < 10; j++)
-    // {
-    //     rt_thread_mdelay(10);
-    //     adc1_value[j] = get_adc2(ADC_Channel_11); //采样
-    // }
-    // voltage1 = Bubble_Filter(adc1_value) * REFER_VOLTAGE / CONVERT_BITS; //电压计算公式：voltage = adc采样值 * 采样精度(3.3V/4096)
-    // current = voltage1;                                                  // Is = Vo*1K/(Rs*Rl) = (Vo*1K)/(0.01*100K) = (1*Vo)详细见INA16 Datasheet
-    // return current;
-
-    return 0.0;
+    for (j = 0; j < 10; j++)
+    {
+        adc0_value[j] = get_adc0(); //采样
+    }
+    voltage0 = Bubble_Filter(adc0_value) * LSB / 1000 / 1000;
+    current = voltage0;
+    return current;
 }
 
 // AINP 为AIN1 且AINN 为GND

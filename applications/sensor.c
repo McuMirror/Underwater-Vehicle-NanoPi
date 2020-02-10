@@ -44,33 +44,41 @@ void *sensor_lowSpeed_callback_fun(void *arg)
         // 不必再延时，get_voltage_value() 内已有延时
         Sensor.CPU.Temperature = get_cpu_temp();          //获取CPU温度
         Sensor.PowerSource.Voltage = get_voltage_value(); //获取电源电压值
-        // if (Sensor.PowerSource.Voltage > 6.0f)            //当未接入电源时，不检测电流值
+
+        // if (Sensor.PowerSource.Voltage > 6.0f) //当未接入电源时，不检测电流值
         // {
-        //     Sensor.PowerSource.Current = get_current_value(); //获取INA169电流值
-        //     temp_current = Sensor.PowerSource.Current;
-        //     Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);
-        //     //电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
+
+        Sensor.PowerSource.Current = get_current_value();
+        temp_current = Sensor.PowerSource.Current;
+        Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);
+        //电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
+
         // }
     }
     return NULL;
 }
 
-/**
-  * @brief  sensor_highSpeed_callback_fun(高速获取传感器任务函数)
-  * @param  void* arg
-  * @retval None
-  * @notice 
-  */
+void *DepthSensor_callback_fun(void *arg)
+{
+    if (MS5837 == Sensor.DepthSensor.Type) //深度传感器类型判定
+    {
+    }
+    else if (SPL1301 == Sensor.DepthSensor.Type)
+    {
+        spl1301_init();
+        while (1)
+        {
+            Depth_Sensor_Data_Convert(); //深度数据转换
+            delay(20);
+        }
+    }
+    else if (DS_NULL == Sensor.DepthSensor.Type)
+    {
+        log_e("not set Depth Senor");
+    }
 
-// void *sensor_highSpeed_callback_fun(void *arg)
-// {
-//     while (1)
-//     {
-//         Depth_Sensor_Data_Convert();  //深度数据转换
-//         delay(20);
-//     }
-//     return NULL;
-// }
+    return NULL;
+}
 
 void *JY901_callback_fun(void *arg)
 {
@@ -95,18 +103,7 @@ void *cpu_usage_callback_fun(void *arg)
 int sensor_thread_init(void)
 {
     memset(&Sensor, 0, sizeof(Sensor_Type));
-
-    if (MS5837 == Sensor.DepthSensor.Type) //深度传感器类型判定
-    {
-    }
-    else if (SPL1301 == Sensor.DepthSensor.Type)
-    {
-        // spl1301_init();
-    }
-    else if (DS_NULL == Sensor.DepthSensor.Type)
-    {
-        log_e("not set Depth Senor");
-    }
+    Sensor.DepthSensor.Type = SPL1301;
 
     pthread_t cpu_usage_tid;
     if (pthread_create(&cpu_usage_tid, NULL, cpu_usage_callback_fun, NULL) == -1)
@@ -144,18 +141,17 @@ int sensor_thread_init(void)
         return -2;
     }
 
-    // pthread_t sensor_highSpeed_tid;
-    // if (pthread_create(&sensor_highSpeed_tid, NULL, sensor_highSpeed_callback_fun, NULL) == -1)
-    // {
-    //     log_e("sensor_highSpeed_thread create error!");
-    //     return 1;
-    // }
-
-    // if (pthread_detach(sensor_highSpeed_tid))
-    // {
-    //     log_w("sensor_highSpeed_thread detach failed...");
-    //     return -2;
-    // }
+    pthread_t DepthSensor_tid;
+    if (pthread_create(&DepthSensor_tid, NULL, DepthSensor_callback_fun, NULL) == -1)
+    {
+        log_e("DepthSensor_thread create error!");
+        return 1;
+    }
+    if (pthread_detach(DepthSensor_tid))
+    {
+        log_w("DepthSensor_thread detach failed...");
+        return -2;
+    }
 
     return 0;
 }
@@ -187,24 +183,6 @@ void Depth_Sensor_Data_Convert(void) //深度传感器数据转换
     }
     else if (MS5837 == Sensor.DepthSensor.Type) //使用MS5837
     {
-        // if (ON_OFF == 0)
-        // {
-        //     ON_OFF = 1;                                                   //自锁开关
-        //     Sensor.DepthSensor.Init_PessureValue = get_ms5837_pressure(); //获取初始化数据
-        // }
-
-        // Sensor.DepthSensor.PessureValue = get_ms5837_pressure();
-        // Sensor.DepthSensor.Temperature = get_ms5837_temperature();
-
-        // //理想状态，深度传感器的压力值理应越来越大
-        // if (Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue >= 1 &&
-        //     Sensor.DepthSensor.Init_PessureValue - Sensor.DepthSensor.PessureValue <= 5)
-        // { //若深度传感器 当前值逐渐变小，则判定为发生漂移，令初值等于当前值
-
-        //     Sensor.DepthSensor.Init_PessureValue = Sensor.DepthSensor.PessureValue;
-        // }
-        // /* 深度数值 单位为cm   定标系数为 1.95 单位/cm */
-        // Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue) / 1.95f);
     }
 }
 
