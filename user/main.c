@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: 主函数
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime : 2020-02-10 16:23:13
+ * @LastEditTime : 2020-02-10 17:11:37
  * @LastEditors  : chenxi
  */
+
 #define LOG_TAG "main"
 
 #include "elog.h"

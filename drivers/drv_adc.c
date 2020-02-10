@@ -1,4 +1,12 @@
-#define LOG_TAG "adc"
+/*
+ * @Description: 获取电压、电流
+ * @Author: chenxi
+ * @Date: 2020-02-09 17:25:35
+ * @LastEditTime : 2020-02-10 17:09:28
+ * @LastEditors  : chenxi
+ */
+
+#define LOG_TAG "drv_adc"
 
 #include "drv_adc.h"
 #include "../easylogger/inc/elog.h"
@@ -21,12 +29,13 @@ static int adc_fd = 0;
 uint8 i = 0;
 float voltage1 = 0.0f;
 uint32 adc1_value[10] = {0};
-/* 冒泡 get 电压 */
+
+// 冒泡获取电压
 float get_voltage_value(void)
 {
     for (i = 0; i < 10; i++)
     {
-        adc1_value[i] = get_adc1(); //采样
+        adc1_value[i] = get_adc1(); // 采样
     }
     voltage1 = Bubble_Filter(adc1_value) * LSB / 1000 / 1000;
 
@@ -37,12 +46,12 @@ uint8 j = 0;
 uint32 adc0_value[10] = {0};
 float voltage0 = 0.0f, current = 0.0f;
 
-/* 冒泡 get 电流 */
+// 冒泡获取电流
 float get_current_value(void)
 {
     for (j = 0; j < 10; j++)
     {
-        adc0_value[j] = get_adc0(); //采样
+        adc0_value[j] = get_adc0(); // 采样
     }
     voltage0 = Bubble_Filter(adc0_value) * LSB / 1000 / 1000;
     current = voltage0;
@@ -89,7 +98,7 @@ uint16 get_adc0(void)
     return (data[0] << 8) + data[1];
 }
 
-//初始化ADC
+// 初始化ADC
 int adc_init(void)
 {
     adc_fd = wiringPiSPISetupMode(1, 1000000, 1); //1MHz

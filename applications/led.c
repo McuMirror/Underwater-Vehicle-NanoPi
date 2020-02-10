@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: RGB 灯
  * @Author: chenxi
  * @Date: 2020-02-02 15:32:14
- * @LastEditTime : 2020-02-08 23:14:13
+ * @LastEditTime : 2020-02-10 17:05:29
  * @LastEditors  : chenxi
  */
+
 #define LOG_TAG "led"
 
 #include <stdio.h>

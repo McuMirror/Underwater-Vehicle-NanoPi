@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: 深度传感器相关函数
  * @Author: chenxi
  * @Date: 2020-01-14 16:52:11
- * @LastEditTime : 2020-02-09 15:54:32
+ * @LastEditTime : 2020-02-10 16:57:25
  * @LastEditors  : chenxi
  */
+
 #ifndef SPL1301_H
 #define SPL1301_H
 

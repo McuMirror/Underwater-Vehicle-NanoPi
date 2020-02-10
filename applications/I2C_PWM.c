@@ -1,3 +1,11 @@
+/*
+ * @Description: 通过 I2C 控制 PCA9685 来使用 PWM 功能
+ * @Author: chenxi
+ * @Date: 2020-02-10 12:15:34
+ * @LastEditTime : 2020-02-10 17:04:47
+ * @LastEditors  : chenxi
+ */
+
 #define LOG_TAG "I2C_PWM"
 
 #include "../easylogger/inc/elog.h"
@@ -86,6 +94,7 @@ void I2C_PWM_SetPWM(uint16 num, uint32 on, uint32 off)
 void I2C_PWM_SetPin(uint16 num, uint16 val, uint16 invert)
 {
   // TODO
+
   /*
   // Clamp value between 0 and 4095 inclusive.
   val = min(val, 4095);

@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: 滤波函数
  * @Author: chenxi
  * @Date: 2020-02-08 21:46:49
- * @LastEditTime : 2020-02-09 09:47:48
+ * @LastEditTime : 2020-02-10 16:58:06
  * @LastEditors  : chenxi
  */
+
 #ifndef __FILTER_H_
 #define __FILTER_H_
 

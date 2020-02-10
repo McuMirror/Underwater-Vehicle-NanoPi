@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: olcd 相关函数
  * @Author: chenxi
- * @Date: 2020-01-22 20:13:17
- * @LastEditTime : 2020-02-09 11:27:43
+ * @Date: 2020-02-10 12:15:34
+ * @LastEditTime : 2020-02-10 16:56:42
  * @LastEditors  : chenxi
  */
+
 #ifndef __DRV_OLCD_H
 #define __DRV_OLCD_H
 
@@ -16,7 +17,7 @@
 
 #define OLCD_CMD 0  //写命令
 #define OLCD_DATA 1 //写数据
-//OLCD控制用函数
+// OLCD控制用函数
 void OLCD_WR_Byte(uint8 dat, uint8 cmd);
 void OLCD_Display_On(void);
 void OLCD_Display_Off(void);

@@ -1,4 +1,12 @@
-#define LOG_TAG "olcd"
+/*
+ * @Description: olcd 相关函数
+ * @Author: chenxi
+ * @Date: 2020-02-10 12:15:34
+ * @LastEditTime : 2020-02-10 17:10:28
+ * @LastEditors  : chenxi
+ */
+
+#define LOG_TAG "drv_olcd"
 
 #include "../easylogger/inc/elog.h"
 #include <stdlib.h>
@@ -8,7 +16,6 @@
 #include <wiringPiI2C.h>
 
 #include "drv_olcd.h"
-//#include "init.h"
 
 static int olcd_fd; //驱动文件描述符
 
@@ -27,6 +34,7 @@ uint8 OLCD_GRAM[128][8];
 //向SSD1306写入一个字节。
 //dat:要写入的数据/命令
 //cmd:数据/命令标志 0,表示命令;1,表示数据;
+
 void OLCD_WR_Byte(uint8 dat, uint8 cmd)
 {
 	if (cmd)
@@ -249,7 +257,7 @@ int OLCD_Init(void)
 	olcd_fd = wiringPiI2CSetupInterface(I2C_OLCD_Device, I2C_OLCD_Addr);
 	log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
 	log_d("olcd_fd:%d", olcd_fd);
-	
+
 	if (olcd_fd < 0)
 	{
 		log_w("OLCD init failed");

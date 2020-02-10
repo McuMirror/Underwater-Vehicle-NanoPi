@@ -1,8 +1,8 @@
 /*
  * @Description: 通过 I2C 控制 PCA9685 来使用 PWM 功能
  * @Author: chenxi
- * @Date: 2020-01-04 21:54:00
- * @LastEditTime : 2020-02-09 10:58:52
+ * @Date: 2020-02-10 12:15:34
+ * @LastEditTime : 2020-02-10 16:36:03
  * @LastEditors  : chenxi
  */
 
@@ -12,8 +12,8 @@
 #include "..//user//DataType.h"
 
 #define I2C_PWM_Device "/dev/i2c-0" // PCA9685 使用的 I2C
-#define I2C_PWM_Addr 0x40           // 默认 PCA9685 地址
-#define I2C0_OE 7                   // I2C0_OE
+#define I2C_PWM_Addr 0x40   // 默认 PCA9685 地址
+#define I2C0_OE 7   // I2C0_OE
 
 #define PCA9685_SUBADR1 0x2
 #define PCA9685_SUBADR2 0x3

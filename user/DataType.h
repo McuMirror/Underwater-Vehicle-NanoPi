@@ -1,3 +1,11 @@
+/*
+ * @Description: 各类数据结构定义文件
+ * @Author: chenxi
+ * @Date: 2020-02-08 21:46:49
+ * @LastEditTime : 2020-02-10 16:58:46
+ * @LastEditors  : chenxi
+ */
+
 #ifndef __DATA_TYPE_H
 #define __DATA_TYPE_H
 

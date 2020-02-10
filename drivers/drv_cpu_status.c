@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: 获取 CPU 状况
  * @Author: chenxi
  * @Date: 2020-02-09 11:45:20
- * @LastEditTime : 2020-02-09 19:55:42
+ * @LastEditTime : 2020-02-10 17:10:08
  * @LastEditors  : chenxi
  */
+
 #define LOG_TAG "drv_cpu_status"
 
 #include "../easylogger/inc/elog.h"
@@ -57,7 +58,7 @@ float get_cpu_temp(void)
     return temp;
 }
 
-// 获取内存
+// 获取 CPU 内存情况
 void get_memoccupy(MEM_OCCUPY *mem)
 {
     FILE *fd;

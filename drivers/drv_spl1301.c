@@ -1,3 +1,11 @@
+/*
+ * @Description: 深度传感器相关函数
+ * @Author: chenxi
+ * @Date: 2020-01-14 16:52:11
+ * @LastEditTime : 2020-02-10 17:10:51
+ * @LastEditors  : chenxi
+ */
+
 #define LOG_TAG "spl1301"
 
 #include "../easylogger/inc/elog.h"
@@ -12,7 +20,6 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 
-
 static struct spl1301_t spl1301;
 static struct spl1301_t *p_spl1301;
 static int spl1301_fd;
@@ -22,7 +29,7 @@ void spl1301_get_calib_param(void);
 /*****************************************************************************
  Function: spl1301_init
  Description: initialization
- Input: void             
+ Input: void   
  Output: 
  Return: fd 初始化成功,0初始化失败
  Calls: 
@@ -34,14 +41,14 @@ int spl1301_init(void)
     spl1301_fd = wiringPiI2CSetupInterface(spl1301_I2C, HW_ADR);
 
     log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
-	log_d("spl1301_fd:%d", spl1301_fd);
+    log_d("spl1301_fd:%d", spl1301_fd);
 
     if (spl1301_fd < 0)
     {
         log_e("spl1301 init failed");
         return -1;
     }
-    
+
     p_spl1301 = &spl1301; /* read Chip Id */
     p_spl1301->i32rawPressure = 0;
     p_spl1301->i32rawTemperature = 0;
@@ -64,9 +71,9 @@ int spl1301_init(void)
 /*****************************************************************************
  Function: spl1301_rateset
  Description: set sample rate and over sample rate per second for specific sensor
- Input:     uint8 u8OverSmpl  oversample rate         Maximal = 128
-            uint8 u8SmplRate  sample rate(Hz) Maximal = 128
-            uint8 iSensor     0: Pressure; 1: Temperature 
+ Input:   uint8 u8OverSmpl  oversample rate   Maximal = 128
+  uint8 u8SmplRate  sample rate(Hz) Maximal = 128
+  uint8 iSensor   0: Pressure; 1: Temperature 
  Output: 
  Return: void
  Calls: 
@@ -174,7 +181,7 @@ void spl1301_rateset(uint8 iSensor, uint8 u8SmplRate, uint8 u8OverSmpl)
 /*****************************************************************************
  Function: spl1301_get_calib_param
  Description: obtain the calibrated coefficient
- Input: void     
+ Input: void   
  Output: 
  Return: void
  Calls: 
@@ -223,7 +230,7 @@ void spl1301_get_calib_param(void)
 /*****************************************************************************
  Function: spl1301_start_temperature
  Description: start one measurement for temperature
- Input: void    
+ Input: void  
  Output: 
  Return: void
  Calls: 
@@ -237,7 +244,7 @@ void spl1301_start_temperature(void)
 /*****************************************************************************
  Function: spl1301_start_pressure
  Description: start one measurement for pressure
- Input: void       
+ Input: void   
  Output: 
  Return: void
  Calls: 
@@ -251,7 +258,7 @@ void spl1301_start_pressure(void)
 /*****************************************************************************
  Function: spl1301_start_continuous
  Description: Select mode for the continuously measurement
- Input: uint8 mode  1: pressure; 2: temperature; 3: pressure and temperature        
+ Input: uint8 mode  1: pressure; 2: temperature; 3: pressure and temperature  
  Output: 
  Return: void
  Calls: 
@@ -271,7 +278,7 @@ void spl1301_stop(void)
  Function: spl1301_get_raw_temp
  Description:obtain the original temperature value and turn them into 32bits-integer 
  获取原始温度值并将其转换为32位整数
- Input: void          
+ Input: void  
  Output: 
  Return: void
  Calls: 
@@ -292,7 +299,7 @@ void spl1301_get_raw_temp(void)
 /*****************************************************************************
  Function: spl1301_get_raw_pressure
  Description: obtain the original pressure value and turn them into 32bits-integer
- Input: void       
+ Input: void   
  Output: 
  Return: void
  Calls: 
@@ -313,7 +320,7 @@ void spl1301_get_raw_pressure(void)
 /*****************************************************************************
  Function: spl1301_get_temperature
  Description:  return calibrated temperature value base on original value.
- Input: void          
+ Input: void  
  Output: 
  Return: void
  Calls: 
@@ -333,7 +340,7 @@ float get_spl1301_temperature(void)
 /*****************************************************************************
  Function: spl1301_get_pressure
  Description: return calibrated pressure value base on original value.
- Input: void            
+ Input: void  
  Output: 
  Return: void
  Calls: 

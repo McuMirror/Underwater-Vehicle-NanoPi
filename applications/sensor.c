@@ -1,3 +1,11 @@
+/*
+ * @Description: 开启各个传感器线程函数、打印传感器信息
+ * @Author: chenxi
+ * @Date: 2020-02-09 12:30:19
+ * @LastEditTime : 2020-02-10 17:09:07
+ * @LastEditors  : chenxi
+ */
+
 #define LOG_TAG "sensor"
 
 #include "../easylogger/inc/elog.h"
@@ -16,13 +24,10 @@
 #include <wiringPi.h>
 #include <wiringSerial.h>
 
-// #include "drv_cpuusage.h"
-// #include "drv_adc.h"
-
 /*----------------------- Variable Declarations -----------------------------*/
 char *Depth_Sensor_Name[3] = {"MS5837", "SPL1301", "null"};
 
-extern struct rt_event init_event; /* ALL_init 事件控制块 */
+// extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor; //传感器参数
 float temp_current = 0.0f;
@@ -51,7 +56,7 @@ void *sensor_lowSpeed_callback_fun(void *arg)
         Sensor.PowerSource.Current = get_current_value();
         temp_current = Sensor.PowerSource.Current;
         Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);
-        //电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
+        // 电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
 
         // }
     }
@@ -60,7 +65,7 @@ void *sensor_lowSpeed_callback_fun(void *arg)
 
 void *DepthSensor_callback_fun(void *arg)
 {
-    if (MS5837 == Sensor.DepthSensor.Type) //深度传感器类型判定
+    if (MS5837 == Sensor.DepthSensor.Type) // 深度传感器类型判定
     {
     }
     else if (SPL1301 == Sensor.DepthSensor.Type)
@@ -68,7 +73,7 @@ void *DepthSensor_callback_fun(void *arg)
         spl1301_init();
         while (1)
         {
-            Depth_Sensor_Data_Convert(); //深度数据转换
+            Depth_Sensor_Data_Convert(); // 深度数据转换
             delay(20);
         }
     }
@@ -189,31 +194,31 @@ void Depth_Sensor_Data_Convert(void) //深度传感器数据转换
 /* 打印传感器信息 */
 void print_sensor_info(void)
 {
-    log_i("    variable        |  value");
+    log_i("  variable  |  value");
     log_i("--------------------|-----------");
 
-    log_i("      Roll          |  %+0.3f", Sensor.JY901.Euler.Roll);
-    log_i("      Pitch         |  %+0.3f", Sensor.JY901.Euler.Pitch);
-    log_i("      Yaw           |  %+0.3f", Sensor.JY901.Euler.Yaw);
+    log_i("  Roll  |  %+0.3f", Sensor.JY901.Euler.Roll);
+    log_i("  Pitch   |  %+0.3f", Sensor.JY901.Euler.Pitch);
+    log_i("  Yaw   |  %+0.3f", Sensor.JY901.Euler.Yaw);
     log_i("--------------------|-----------");
-    log_i("      Acc.x         |  %+0.3f", Sensor.JY901.Acc.x);
-    log_i("      Acc.y         |  %+0.3f", Sensor.JY901.Acc.y);
-    log_i("      Acc.z         |  %+0.3f", Sensor.JY901.Acc.z);
+    log_i("  Acc.x   |  %+0.3f", Sensor.JY901.Acc.x);
+    log_i("  Acc.y   |  %+0.3f", Sensor.JY901.Acc.y);
+    log_i("  Acc.z   |  %+0.3f", Sensor.JY901.Acc.z);
     log_i("--------------------|-----------");
-    log_i("      Gyro.x        |  %+0.3f", Sensor.JY901.Gyro.x);
-    log_i("      Gyro.y        |  %+0.3f", Sensor.JY901.Gyro.y);
-    log_i("      Gyro.z        |  %+0.3f", Sensor.JY901.Gyro.z);
+    log_i("  Gyro.x  |  %+0.3f", Sensor.JY901.Gyro.x);
+    log_i("  Gyro.y  |  %+0.3f", Sensor.JY901.Gyro.y);
+    log_i("  Gyro.z  |  %+0.3f", Sensor.JY901.Gyro.z);
     log_i(" JY901_Temperature  |  %+0.3f", Sensor.JY901.Temperature);
     log_i("--------------------|-----------");
-    log_i("     Voltage        |  %0.3f", Sensor.PowerSource.Voltage); //电压
-    log_i("     Current        |  %0.3f", Sensor.PowerSource.Current); //电流
+    log_i("   Voltage  |  %0.3f", Sensor.PowerSource.Voltage); //电压
+    log_i("   Current  |  %0.3f", Sensor.PowerSource.Current); //电流
     log_i("--------------------|-----------");
     log_i(" Depth Sensor Type  |  %s", Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
     log_i(" Water Temperature  |  %0.3f", Sensor.DepthSensor.Temperature);          //水温
     log_i("sensor_Init_Pressure|  %0.3f", Sensor.DepthSensor.Init_PessureValue);    //深度传感器初始压力值
     log_i("   sensor_Pressure  |  %0.3f", Sensor.DepthSensor.PessureValue);         //深度传感器当前压力值
-    log_i("       Depth        |  %0.3f", Sensor.DepthSensor.Depth);                //深度值
+    log_i("   Depth  |  %0.3f", Sensor.DepthSensor.Depth);                          //深度值
     log_i("--------------------|-----------");
     log_i("   CPU.Temperature  |  %0.3f", Sensor.CPU.Temperature); //CPU温度
-    log_i("     CPU.Usages     |  %0.3f", Sensor.CPU.Usage);       //CPU使用率
+    log_i("   CPU.Usages   |  %0.3f", Sensor.CPU.Usage);           //CPU使用率
 }

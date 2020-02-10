@@ -1,10 +1,11 @@
 /*
- * @Description: 
+ * @Description: RGB 灯
  * @Author: chenxi
- * @Date: 2020-02-02 15:32:08
- * @LastEditTime : 2020-02-02 16:50:16
+ * @Date: 2020-02-02 15:32:14
+ * @LastEditTime : 2020-02-10 17:05:51
  * @LastEditors  : chenxi
  */
+
 #ifndef __LED_H__
 #define __LED_H__
 
