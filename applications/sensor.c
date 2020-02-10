@@ -2,7 +2,7 @@
  * @Description: 开启各个传感器线程函数、打印传感器信息
  * @Author: chenxi
  * @Date: 2020-02-09 12:30:19
- * @LastEditTime : 2020-02-10 17:09:07
+ * @LastEditTime : 2020-02-10 18:35:47
  * @LastEditors  : chenxi
  */
 
@@ -61,6 +61,37 @@ void *sensor_lowSpeed_callback_fun(void *arg)
         // }
     }
     return NULL;
+}
+
+//深度传感器数据转换
+void Depth_Sensor_Data_Convert(void)
+{
+    static uint32 value[10] = {0};
+    static uint8 ON_OFF = 0; //自锁开关
+    static uint8 i = 0;
+
+    if (SPL1301 == Sensor.DepthSensor.Type) //歌尔 SPL1301
+    {
+        spl1301_get_raw_temp();
+        spl1301_get_raw_pressure(); //传感器数据转换
+
+        if (ON_OFF == 0)
+        {
+            ON_OFF = 1;
+            Sensor.DepthSensor.Init_PessureValue = get_spl1301_pressure(); //获取初始化数据
+        }
+        for (i = 0; i < 10; i++)
+        {
+            value[i++] = get_spl1301_pressure(); //获取1次数据
+        }
+        Sensor.DepthSensor.Temperature = get_spl1301_temperature();
+        Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
+        /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
+        Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue) / 20);
+    }
+    else if (MS5837 == Sensor.DepthSensor.Type) //使用MS5837
+    {
+    }
 }
 
 void *DepthSensor_callback_fun(void *arg)
@@ -161,64 +192,34 @@ int sensor_thread_init(void)
     return 0;
 }
 
-void Depth_Sensor_Data_Convert(void) //深度传感器数据转换
-{
-    static uint32 value[10] = {0};
-    static uint8 ON_OFF = 0; //自锁开关
-    static uint8 i = 0;
-
-    if (SPL1301 == Sensor.DepthSensor.Type) //歌尔 SPL1301
-    {
-        spl1301_get_raw_temp();
-        spl1301_get_raw_pressure(); //传感器数据转换
-
-        if (ON_OFF == 0)
-        {
-            ON_OFF = 1;
-            Sensor.DepthSensor.Init_PessureValue = get_spl1301_pressure(); //获取初始化数据
-        }
-        for (i = 0; i < 10; i++)
-        {
-            value[i++] = get_spl1301_pressure(); //获取1次数据
-        }
-        Sensor.DepthSensor.Temperature = get_spl1301_temperature();
-        Sensor.DepthSensor.PessureValue = Bubble_Filter(value);
-        /* 深度数值 单位为cm   定标系数为 1.3 单位/cm */
-        Sensor.DepthSensor.Depth = ((Sensor.DepthSensor.PessureValue - Sensor.DepthSensor.Init_PessureValue) / 20);
-    }
-    else if (MS5837 == Sensor.DepthSensor.Type) //使用MS5837
-    {
-    }
-}
-
-/* 打印传感器信息 */
+// 打印传感器信息
 void print_sensor_info(void)
 {
-    log_i("  variable  |  value");
-    log_i("--------------------|-----------");
+    log_i("      variable      |   value");
+    log_i("--------------------|------------");
 
-    log_i("  Roll  |  %+0.3f", Sensor.JY901.Euler.Roll);
-    log_i("  Pitch   |  %+0.3f", Sensor.JY901.Euler.Pitch);
-    log_i("  Yaw   |  %+0.3f", Sensor.JY901.Euler.Yaw);
-    log_i("--------------------|-----------");
-    log_i("  Acc.x   |  %+0.3f", Sensor.JY901.Acc.x);
-    log_i("  Acc.y   |  %+0.3f", Sensor.JY901.Acc.y);
-    log_i("  Acc.z   |  %+0.3f", Sensor.JY901.Acc.z);
-    log_i("--------------------|-----------");
-    log_i("  Gyro.x  |  %+0.3f", Sensor.JY901.Gyro.x);
-    log_i("  Gyro.y  |  %+0.3f", Sensor.JY901.Gyro.y);
-    log_i("  Gyro.z  |  %+0.3f", Sensor.JY901.Gyro.z);
-    log_i(" JY901_Temperature  |  %+0.3f", Sensor.JY901.Temperature);
-    log_i("--------------------|-----------");
-    log_i("   Voltage  |  %0.3f", Sensor.PowerSource.Voltage); //电压
-    log_i("   Current  |  %0.3f", Sensor.PowerSource.Current); //电流
-    log_i("--------------------|-----------");
-    log_i(" Depth Sensor Type  |  %s", Depth_Sensor_Name[Sensor.DepthSensor.Type]); //深度传感器类型
-    log_i(" Water Temperature  |  %0.3f", Sensor.DepthSensor.Temperature);          //水温
-    log_i("sensor_Init_Pressure|  %0.3f", Sensor.DepthSensor.Init_PessureValue);    //深度传感器初始压力值
-    log_i("   sensor_Pressure  |  %0.3f", Sensor.DepthSensor.PessureValue);         //深度传感器当前压力值
-    log_i("   Depth  |  %0.3f", Sensor.DepthSensor.Depth);                          //深度值
-    log_i("--------------------|-----------");
-    log_i("   CPU.Temperature  |  %0.3f", Sensor.CPU.Temperature); //CPU温度
-    log_i("   CPU.Usages   |  %0.3f", Sensor.CPU.Usage);           //CPU使用率
+    log_i("        Roll        |  %+0.3f", Sensor.JY901.Euler.Roll);
+    log_i("        Pitch       |  %+0.3f", Sensor.JY901.Euler.Pitch);
+    log_i("        Yaw         |  %+0.3f", Sensor.JY901.Euler.Yaw);
+    log_i("--------------------|------------");
+    log_i("        Acc.x       |  %+0.3f", Sensor.JY901.Acc.x);
+    log_i("        Acc.y       |  %+0.3f", Sensor.JY901.Acc.y);
+    log_i("        Acc.z       |  %+0.3f", Sensor.JY901.Acc.z);
+    log_i("--------------------|------------");
+    log_i("       Gyro.x       |  %+0.3f", Sensor.JY901.Gyro.x);
+    log_i("       Gyro.y       |  %+0.3f", Sensor.JY901.Gyro.y);
+    log_i("       Gyro.z       |  %+0.3f", Sensor.JY901.Gyro.z);
+    log_i("  JY901_Temperature |  %+0.3f", Sensor.JY901.Temperature);
+    log_i("--------------------|------------");
+    log_i("       Voltage      |  %0.3f", Sensor.PowerSource.Voltage); // 电压
+    log_i("       Current      |  %0.3f", Sensor.PowerSource.Current); // 电流
+    log_i("--------------------|------------");
+    log_i(" Depth Sensor Type  |  %s", Depth_Sensor_Name[Sensor.DepthSensor.Type]); // 深度传感器类型
+    log_i(" Water Temperature  |  %0.3f", Sensor.DepthSensor.Temperature);          // 水温
+    log_i("sensor_Init_Pressure|  %0.3f", Sensor.DepthSensor.Init_PessureValue);    // 深度传感器初始压力值
+    log_i("   sensor_Pressure  |  %0.3f", Sensor.DepthSensor.PessureValue);         // 深度传感器当前压力值
+    log_i("        Depth       |  %0.3f", Sensor.DepthSensor.Depth);                // 深度值
+    log_i("--------------------|------------");
+    log_i("   CPU.Temperature  |  %0.3f", Sensor.CPU.Temperature); // CPU温度
+    log_i("      CPU.Usages    |  %0.3f", Sensor.CPU.Usage);       // CPU使用率
 }
