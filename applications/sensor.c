@@ -2,8 +2,8 @@
  * @Description: 开启各个传感器线程函数、打印传感器信息
  * @Author: chenxi
  * @Date: 2020-02-09 12:30:19
- * @LastEditTime : 2020-02-10 18:35:47
- * @LastEditors  : chenxi
+ * @LastEditTime : 2020-02-16 20:42:00
+ * @LastEditors: chenxi
  */
 
 #define LOG_TAG "sensor"

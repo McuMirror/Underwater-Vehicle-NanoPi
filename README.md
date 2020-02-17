@@ -22,9 +22,9 @@ sudo cp easylogger/libeasylogger.so /usr/lib/
 make && sudo ./NanoPiMain
 ```
 
-### 2.3 注意事项
+## 2.3 注意事项
 
-有时修改会后编译执行会出问题，未出现修改部分效果，此时`make clean` 后再编译运行即可。
+有时修改会后编译执行会出问题，未出现修改部分效果，此时 `make clean` 后再编译运行即可。
 
 # 3. 进度
 
@@ -40,13 +40,13 @@ make && sudo ./NanoPiMain
   - [x] 深度传感器
   - [x] 显示屏
   - [x] 九轴
-  - [ ] PWM
+  - [x] PWM
     - [x] 电压
-    - [ ] 频率
+    - [x] 频率
   - [x] CPU状况
     - [x] CPU温度
     - [x] CPU使用率
 - [ ] 整体进度
   - [x] 传感器整合
   - [ ] 系统自检
-  - [ ] 通信协议
+  - [ ] NanoPi与上位机通信
