@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.md": "markdown",
+        "gyroscope.h": "c",
+        "ret_data.h": "c",
+        "filter.h": "c",
+        "server.h": "c",
+        "sensor.h": "c",
+        "datatype.h": "c"
+    }
+}

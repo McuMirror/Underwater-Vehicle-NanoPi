@@ -1,9 +1,9 @@
 /*
- * @Description: ¸÷ÀàÊı¾İ½á¹¹¶¨ÒåÎÄ¼ş
+ * @Description: å„ç±»æ•°æ®ç»“æ„å®šä¹‰æ–‡ä»¶
  * @Author: chenxi
  * @Date: 2020-02-08 21:46:49
  * @LastEditTime : 2020-02-10 16:58:46
- * @LastEditors  : chenxi
+ * @LastEditors: chenxi
  */
 
 #ifndef __DATA_TYPE_H
@@ -23,7 +23,7 @@
 
 #define my_abs(x) (((x) > 0) ? (x) : -(x))
 
-/* ------------------------¡¾Êı¾İ½á¹¹Ìå¶¨Òå¡¿---------------------------------*/
+/* ------------------------ã€æ•°æ®ç»“æ„ä½“å®šä¹‰ã€‘---------------------------------*/
 typedef struct
 {
 	float p;
@@ -36,81 +36,80 @@ typedef struct
 	float x;
 	float y;
 	float z;
-} Vector3f; //3ÖáÏòÁ¿ floatĞÍ
+} Vector3f; //3è½´å‘é‡ floatå‹
 
 typedef struct
 {
 	short x;
 	short y;
 	short z;
-} Vector3s; //3ÖáÏòÁ¿ shortĞÍ 16Îª¶ÌÕûĞÍ
+} Vector3s; //3è½´å‘é‡ shortå‹ 16ä¸ºçŸ­æ•´å‹
 
 typedef struct
 {
 	float Roll;  //x
 	float Pitch; //y
 	float Yaw;   //z
-} Euler3f;		 //Å·À­½Ç3ÖáÏòÁ¿ shortĞÍ 16Îª¶ÌÕûĞÍ
+} Euler3f;		 //æ¬§æ‹‰è§’3è½´å‘é‡ shortå‹ 16ä¸ºçŸ­æ•´å‹
 
 typedef struct
 {
-	float UP_P1;   //×ó±êÖ¾Î»Ç°½øÏµÊı
-	float UP_P2;   //ÓÒ±êÖ¾Î»Ç°½øÏµÊı
-	float DOWN_P1; //×ó±êÖ¾Î»ºóÍËÏµÊı
-	float DOWN_P2; //ÓĞ±êÖ¾Î»ºóÍËÏµÊı
-	float LEFT_P;  //×ó±êÖ¾ÏµÊı
-	float RIGHT_P; //ÓÒ±êÖ¾ÏµÊı
-} Direction_Type;  //·½ÏòÏµÊı
+	float UP_P1;   //å·¦æ ‡å¿—ä½å‰è¿›ç³»æ•°
+	float UP_P2;   //å³æ ‡å¿—ä½å‰è¿›ç³»æ•°
+	float DOWN_P1; //å·¦æ ‡å¿—ä½åé€€ç³»æ•°
+	float DOWN_P2; //æœ‰æ ‡å¿—ä½åé€€ç³»æ•°
+	float LEFT_P;  //å·¦æ ‡å¿—ç³»æ•°
+	float RIGHT_P; //å³æ ‡å¿—ç³»æ•°
+} Direction_Type;  //æ–¹å‘ç³»æ•°
 
 typedef struct
 {
-	Vector3f Acc;	  //¼ÓËÙ¶È
-	Vector3f Gyro;	 //½ÇËÙ¶È
-	Vector3f Speed;	//ËÙ¶È
-	Vector3s Mag;	  //´Å³¡
-	Euler3f Euler;	 //Å·À­½Ç
-	float Temperature; //JY901ÎÂ¶È
+	Vector3f Acc;	  //åŠ é€Ÿåº¦
+	Vector3f Gyro;	 //è§’é€Ÿåº¦
+	Vector3f Speed;	//é€Ÿåº¦
+	Vector3s Mag;	  //ç£åœº
+	Euler3f Euler;	 //æ¬§æ‹‰è§’
+	float Temperature; //JY901æ¸©åº¦
 } JY901_Type;
 
 typedef struct
 {
-	float Temperature; //CPU ÎÂ¶È
-	float Usage;	   //CPU Ê¹ÓÃÂÊ
+	float Temperature; //CPU æ¸©åº¦
+	float Usage;	   //CPU ä½¿ç”¨ç‡
 } CPU_Type;
 
 typedef struct
 {
 	uint8 Type;
-	float Depth;			 //Éî¶È
-	float Temperature;		 //Ë®ÎÂ
-	float PessureValue;		 //Ñ¹Á¦Öµ
-	float Init_PessureValue; //³õÊ¼»¯²É¼¯µ½µÃÑ¹Á¦Öµ
+	float Depth;			 //æ·±åº¦
+	float Temperature;		 //æ°´æ¸©
+	float PessureValue;		 //å‹åŠ›å€¼
+	float Init_PessureValue; //åˆå§‹åŒ–é‡‡é›†åˆ°å¾—å‹åŠ›å€¼
 } Depth_Sensor_Type;
 
 typedef struct
 {
-	uint8 Percent;  //µçÁ¿°Ù·Ö±È
-	float Current;  //µçÁ÷
-	float Voltage;  //µçÑ¹
-	float Capacity; //µç³ØÈİÁ¿
+	uint8 Percent;  //ç”µé‡ç™¾åˆ†æ¯”
+	float Current;  //ç”µæµ
+	float Voltage;  //ç”µå‹
+	float Capacity; //ç”µæ± å®¹é‡
 } PowerSource_Type;
 
-/***********************´«¸ĞÆ÷Êı¾İ ¾ä±ú******************************/
+/***********************ä¼ æ„Ÿå™¨æ•°æ® å¥æŸ„******************************/
 typedef struct
 {
-
-	CPU_Type CPU;				   //CPU¡¾ÎÂ¶È¡¿¡¾Ê¹ÓÃÂÊ¡¿
-	JY901_Type JY901;			   //¡¾Å·À­½Ç¡¿¡¾ËÙ¶È¡¿
-	Depth_Sensor_Type DepthSensor; //Ë®¡¾ÎÂ¶È¡¿¡¾Éî¶È¡¿
-	PowerSource_Type PowerSource;  //µçÔ´
+	CPU_Type CPU;				   //CPUã€æ¸©åº¦ã€‘ã€ä½¿ç”¨ç‡ã€‘
+	JY901_Type JY901;			   //ã€æ¬§æ‹‰è§’ã€‘ã€é€Ÿåº¦ã€‘
+	Depth_Sensor_Type DepthSensor; //æ°´ã€æ¸©åº¦ã€‘ã€æ·±åº¦ã€‘
+	PowerSource_Type PowerSource;  //ç”µæº
 } Sensor_Type;
 
 typedef enum
 {
-	System_NORMAL_STATUS = 1, //Õı³£Ä£Ê½
-	System_DEBUG_STATUS = 2,  //µ÷ÊÔÄ£Ê½
+	System_NORMAL_STATUS = 1, //æ­£å¸¸æ¨¡å¼
+	System_DEBUG_STATUS = 2,  //è°ƒè¯•æ¨¡å¼
 	System_ERROR_STATUS,
-} VehicleStatus_Enum; //Ã¶¾ÙÏµÍ³×´Ì¬
+} VehicleStatus_Enum; //æšä¸¾ç³»ç»ŸçŠ¶æ€
 
 typedef enum
 {
@@ -120,60 +119,58 @@ typedef enum
 	DirectionRight,
 
 	DirectionMode_MAX,
-} DirectionMode_Eunm; //Ã¶¾Ù·½ÏòÏµÊıÄ£Ê½
+} DirectionMode_Eunm; //æšä¸¾æ–¹å‘ç³»æ•°æ¨¡å¼
 
-/* ------------------------¡¾ÖØÒª¶¨Òå¡¿---------------------------------*/
+/* ------------------------ã€é‡è¦å®šä¹‰ã€‘---------------------------------*/
 
-#define LED_EVENT (1 << 0)	//LEDÊÂ¼ş±êÖ¾Î»
-#define KEY_EVENT (1 << 1)	//KEYÊÂ¼ş±êÖ¾Î»
-#define BUZZ_EVENT (1 << 2)   //BUZZERÊÂ¼ş±êÖ¾Î»
-#define OLED_EVENT (1 << 3)   //OLEDÊÂ¼ş±êÖ¾Î»
-#define GYRO_EVENT (1 << 4)   //GyroscopeÊÂ¼ş±êÖ¾Î»
-#define ADC_EVENT (1 << 5)	//ADCÊÂ¼ş±êÖ¾Î»
-#define PWM_EVENT (1 << 6)	//PWMÊÂ¼ş±êÖ¾Î»
-#define CAM_EVENT (1 << 7)	//CameraÊÂ¼ş±êÖ¾Î»
-#define MS5837_EVENT (1 << 8) //SensorÊÂ¼ş±êÖ¾Î»
+#define LED_EVENT (1 << 0)	//LEDäº‹ä»¶æ ‡å¿—ä½
+#define KEY_EVENT (1 << 1)	//KEYäº‹ä»¶æ ‡å¿—ä½
+#define BUZZ_EVENT (1 << 2)   //BUZZERäº‹ä»¶æ ‡å¿—ä½
+#define OLED_EVENT (1 << 3)   //OLEDäº‹ä»¶æ ‡å¿—ä½
+#define GYRO_EVENT (1 << 4)   //Gyroscopeäº‹ä»¶æ ‡å¿—ä½
+#define ADC_EVENT (1 << 5)	//ADCäº‹ä»¶æ ‡å¿—ä½
+#define PWM_EVENT (1 << 6)	//PWMäº‹ä»¶æ ‡å¿—ä½
+#define CAM_EVENT (1 << 7)	//Cameraäº‹ä»¶æ ‡å¿—ä½
+#define MS5837_EVENT (1 << 8) //Sensoräº‹ä»¶æ ‡å¿—ä½
 
-#define PI 3.141592f					 //´óĞ´±êÃ÷ÆäÎª³£Á¿
-#define Rad2Deg(Rad) (Rad * 180.0f / PI) //»¡¶ÈÖÆ×ª½Ç¶ÈÖµ
-#define Deg2Rad(Deg) (Deg * PI / 180.0f) //½Ç¶ÈÖµ×ª»¡¶ÈÖÆ
+#define PI 3.141592f					 //å¤§å†™æ ‡æ˜å…¶ä¸ºå¸¸é‡
+#define Rad2Deg(Rad) (Rad * 180.0f / PI) //å¼§åº¦åˆ¶è½¬è§’åº¦å€¼
+#define Deg2Rad(Deg) (Deg * PI / 180.0f) //è§’åº¦å€¼è½¬å¼§åº¦åˆ¶
 
-/* --------------¡¾µç³Ø ²ÎÊı¡¿-----------------*/
+/* --------------ã€ç”µæ±  å‚æ•°ã€‘-----------------*/
 
-#define STANDARD_VOLTAGE 3.7f //ï®µç³Ø±ê×¼µçÑ¹
-#define FULL_VOLTAGE 4.2f	 //ï®µç³ØÂúµçÑ¹
+#define STANDARD_VOLTAGE 3.7f //é”‚ç”µæ± æ ‡å‡†ç”µå‹
+#define FULL_VOLTAGE 4.2f	 //é”‚ç”µæ± æ»¡ç”µå‹
 
-/* ----------¡¾º½ĞĞÆ÷ ×ÜÍÆ½øÆ÷ÊıÁ¿¡¿-----------*/
+/* ----------ã€èˆªè¡Œå™¨ æ€»æ¨è¿›å™¨æ•°é‡ã€‘-----------*/
 
-#define FOUR_AXIS 0 // ROV±êÖ¾
-#define SIX_AXIS 1  // AUV±êÖ¾
+#define FOUR_AXIS 0 // ROVæ ‡å¿—
+#define SIX_AXIS 1  // AUVæ ‡å¿—
 
-/* ---------¡¾¹¤×÷Ä£Ê½ ¹¤×÷¡¢µ÷ÊÔ¡¿------------*/
+/* ---------ã€å·¥ä½œæ¨¡å¼ å·¥ä½œã€è°ƒè¯•ã€‘------------*/
 
-#define WORK 0  // ¹¤×÷Ä£Ê½
-#define DEBUG 1 // µ÷ÊÔÄ£Ê½
+#define WORK 0  // å·¥ä½œæ¨¡å¼
+#define DEBUG 1 // è°ƒè¯•æ¨¡å¼
 
-/* -----------¡¾½âËø¡¢Ëø¶¨ ±êÖ¾¡¿--------------*/
+/* -----------ã€è§£é”ã€é”å®š æ ‡å¿—ã€‘--------------*/
 
-#define UNLOCK 1 //È«¾Ö½âËø¡¾Æô¶¯¡¿  ºê¶¨Òå
-#define LOCK 2   //È«¾ÖËø  ¡¾Í£Ö¹¡¿
+#define UNLOCK 1 //å…¨å±€è§£é”ã€å¯åŠ¨ã€‘  å®å®šä¹‰
+#define LOCK 2   //å…¨å±€é”  ã€åœæ­¢ã€‘
 
-/* -----------¡¾Éî¶È´«¸ĞÆ÷ÀàĞÍ ±êÖ¾¡¿-----------*/
+/* -----------ã€æ·±åº¦ä¼ æ„Ÿå™¨ç±»å‹ æ ‡å¿—ã€‘-----------*/
 
-#define MS5837 0  //Éî¶È´«¸ĞÆ÷£ºMS5837
-#define SPL1301 1 //Éî¶È´«¸ĞÆ÷£ºSPL1301
-#define DS_NULL 2 //ÎŞÉî¶È´«¸ĞÆ÷ Depth_Sensor:null
+#define MS5837 0  //æ·±åº¦ä¼ æ„Ÿå™¨ï¼šMS5837
+#define SPL1301 1 //æ·±åº¦ä¼ æ„Ÿå™¨ï¼šSPL1301
+#define DS_NULL 2 //æ— æ·±åº¦ä¼ æ„Ÿå™¨ Depth_Sensor:null
 
-/* ---------------¡¾ÍÆ½øÆ÷ ²ÎÊı¡¿--------------*/
+/* ---------------ã€æ¨è¿›å™¨ å‚æ•°ã€‘--------------*/
 
 #define PropellerPower_Med 1500
 #define PropellerPower_Min 1000
 #define PropellerPower_Max 2000
 
-/* ×îÖØÒª¶¨Òå Ö±½Ó´ÓÉè¶¨ºÃµÄÄ£Ê½(FlashÖĞ¶ÁÈ¡)*/
-extern volatile uint8 VehicleMode; //¡¾FOUR_AXIS¡¿ or ¡¾SIX_AXIS¡¿
-extern volatile uint8 WorkMode;	//¡¾WORK¡¿or ¡¾DEBUG¡¿
-
-Sensor_Type Sensor;
+/* æœ€é‡è¦å®šä¹‰ ç›´æ¥ä»è®¾å®šå¥½çš„æ¨¡å¼(Flashä¸­è¯»å–)*/
+extern volatile uint8 VehicleMode; //ã€FOUR_AXISã€‘ or ã€SIX_AXISã€‘
+extern volatile uint8 WorkMode;	//ã€WORKã€‘or ã€DEBUGã€‘
 
 #endif

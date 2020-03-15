@@ -1,9 +1,9 @@
 /*
- * @Description: 主函数
+ * @Description: 主程序
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime : 2020-02-10 17:11:37
- * @LastEditors  : chenxi
+ * @LastEditTime : 2020-02-16 20:36:58
+ * @LastEditors: chenxi
  */
 
 #define LOG_TAG "main"
@@ -18,6 +18,7 @@
 
 #include "../applications/I2C_PWM.h"
 #include "../applications/sensor.h"
+#include "../applications/server.h"
 
 #include <wiringPi.h>
 
@@ -43,7 +44,8 @@ void easyloggerInit(void)
 void *I2C_PWM_callback_fun(void *arg)
 {
   I2C_PWM_Init();
-  // I2C_PWM_SetPWMFreq(50.0);
+  I2C_PWM_SetPWMFreq(50.0);
+  delay(100); // 没有延时可能会导致 PWM 调节出现问题
 
   int i = 0;
   while (1)
@@ -67,23 +69,13 @@ int main()
     return 1;
   }
 
-  // pthread_t I2C_PWM_tid;
-  // if (pthread_create(&I2C_PWM_tid, NULL, I2C_PWM_callback_fun, NULL) == -1)
-  // {
-  //   log_e("I2C_PWM_thread create error!");
-  //   return 1;
-  // }
-  // if (pthread_detach(I2C_PWM_tid))
-  // {
-  //   log_w("I2C_PWM_thread detach failed...");
-  //   return -2;
-  // }
+  sensor_thread_init(); //初始化传感器
+  server_thread_init(); //初始化服务器
 
-  sensor_thread_init();
   while (1)
   {
     sleep(2);
-    print_sensor_info();
+    // print_sensor_info();
   }
 
   return 0;
