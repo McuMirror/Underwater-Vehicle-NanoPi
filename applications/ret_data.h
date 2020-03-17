@@ -11,13 +11,11 @@
 
 #include "../user/DataType.h"
 
-#define Send_Date_Len 22
+#define RETURN_DATA_LEN 26
 
-void Convert_Return_Computer_Data(uint8 *Return_Data); // 转换需要返回上位机数据
-uint8 Calculate_Check_Byte(uint8 *begin_buff, uint8 *buff, uint8 len);
+void convert_return_computer_data(uint8 *buff); // 转换需要返回上位机数据
+uint8 calculate_check_sum(uint8 *buff, uint8 len);
 
 extern uint8 device_hint_flag; //设备提示字符
-extern uint8 begin_buff[3];
-extern uint8 Return_Data[Send_Date_Len];
 
 #endif

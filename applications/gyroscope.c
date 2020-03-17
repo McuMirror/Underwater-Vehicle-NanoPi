@@ -54,7 +54,7 @@ int JY901_Init(void)
 		log_e("Unable to open serial device: %s", strerror(errno));
 		return -1;
 	}
-	log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
+	log_i("%s: %s: %d", __FILE__, __func__, __LINE__);
 	log_d("JY901_fd:%d", JY901_fd);
 
 	if (JY901_fd < 0)

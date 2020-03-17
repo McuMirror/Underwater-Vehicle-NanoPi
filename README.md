@@ -11,9 +11,15 @@
 # 2. 使用
 
 ## 2.1 动态库设置
-
+先进入 `easylogger` 文件夹中，输入命令 `make` 进行编译：
 ```shell
-sudo cp easylogger/libeasylogger.so /usr/lib/
+$ cd easylogger
+$ make
+```
+
+再将 easylogger 生成的动态库拷贝至系统库下：
+```shell
+$ sudo cp easylogger/libeasylogger.so /usr/lib/
 ```
 
 ## 2.2 编译与执行
@@ -22,6 +28,10 @@ sudo cp easylogger/libeasylogger.so /usr/lib/
 make && sudo ./NanoPiMain
 ```
 
+若提示无法打开某设备，输入 `sudo npi-config` 中 `Advanced Options` 中使能相关设备：
+```shell
+& sudo npi-config
+```
 ## 2.3 注意事项
 
 有时修改会后编译执行会出问题，未出现修改部分效果，此时 `make clean` 后再编译运行即可。
