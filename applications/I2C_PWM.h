@@ -2,8 +2,8 @@
  * @Description: 通过 I2C 控制 PCA9685 来使用 PWM 功能
  * @Author: chenxi
  * @Date: 2020-02-10 12:15:34
- * @LastEditTime : 2020-02-10 16:36:03
- * @LastEditors  : chenxi
+ * @LastEditTime: 2020-03-15 12:52:46
+ * @LastEditors: chenxi
  */
 
 #ifndef __I2C_PWM__
@@ -35,6 +35,6 @@
 int I2C_PWM_Init(void);
 void I2C_PWM_Reset(void);
 void I2C_PWM_SetPWMFreq(float freq);
-void I2C_PWM_SetPWM(uint16 num, uint32 on, uint32 off);
+void I2C_PWM_SetPWM(uint16 num, uint32 on,uint32 off);
 
 #endif

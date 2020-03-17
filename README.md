@@ -46,6 +46,7 @@ make && sudo ./NanoPiMain
   - [x] CPU状况
     - [x] CPU温度
     - [x] CPU使用率
+  - [ ] 推进器
 - [ ] 整体进度
   - [x] 传感器整合
   - [ ] 系统自检

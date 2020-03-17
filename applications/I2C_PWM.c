@@ -2,8 +2,8 @@
  * @Description: 通过 I2C 控制 PCA9685 来使用 PWM 功能
  * @Author: chenxi
  * @Date: 2020-02-10 12:15:34
- * @LastEditTime : 2020-02-10 17:04:47
- * @LastEditors  : chenxi
+ * @LastEditTime: 2020-03-16 14:02:17
+ * @LastEditors: chenxi
  */
 
 #define LOG_TAG "I2C_PWM"
@@ -48,7 +48,7 @@ int I2C_PWM_Init(void)
 
 void I2C_PWM_Reset(void)
 {
-  wiringPiI2CWriteReg8(i2c_pwm_fd, 0x0, 0x0);
+  wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, 0x0);
 }
 
 void I2C_PWM_SetPWMFreq(float freq)
@@ -68,8 +68,9 @@ void I2C_PWM_SetPWMFreq(float freq)
   uint16 newmode = (oldmode & 0x7F) | 0x10;                     // sleep
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, newmode);     // go to sleep
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_PRESCALE, prescale); // set the prescaler
+  delay(50);
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, oldmode);
-  delay(5);
+  delay(50);
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, oldmode | 0xa1); //  This sets the MODE1 register to turn on auto increment.
   // This is why the beginTransmission below was not working.
 }

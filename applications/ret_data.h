@@ -11,7 +11,7 @@
 
 #include "../user/DataType.h"
 
-#define Send_Date_Len 22
+#define Send_Date_Len 22 //数据包长度，不包括包头、校验字
 
 void Convert_Return_Computer_Data(uint8 *Return_Data); // 转换需要返回上位机数据
 uint8 Calculate_Check_Byte(uint8 *begin_buff, uint8 *buff, uint8 len);

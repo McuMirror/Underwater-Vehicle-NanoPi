@@ -2,7 +2,7 @@
  * @Description: 服务器线程
  * @Author: chenxi
  * @Date: 2020-02-15 19:57:26
- * @LastEditTime : 2020-02-16 20:43:06
+ * @LastEditTime: 2020-03-17 23:29:57
  * @LastEditors: chenxi
  */
 
@@ -65,6 +65,11 @@ void *send_thread(void *arg)
             return NULL;
         }
         delay(1000);
+
+        printf("send to PC: ");
+        for (int i = 0; i < Send_Date_Len; i++)
+            printf("%4d", Return_Data[i]);
+        printf("\n");
     }
     return NULL;
 }
@@ -84,6 +89,12 @@ void *recv_thread(void *arg)
             }
             return NULL;
         }
+
+        printf("recv from PC: ");
+        for (int i = 0; i < Recv_Date_Len; i++)
+            printf("%3X", recv_buff[i]);
+        printf("\n");
+
         Remote_Control_Data_Analysis(recv_buff);
     }
 

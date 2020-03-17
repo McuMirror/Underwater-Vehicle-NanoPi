@@ -2,8 +2,8 @@
  * @Description: ¾ÅÖáÄ£¿é
  * @Author: chenxi
  * @Date: 2020-02-10 12:15:34
- * @LastEditTime : 2020-02-10 17:03:57
- * @LastEditors  : chenxi
+ * @LastEditTime: 2020-03-17 09:23:19
+ * @LastEditors: chenxi
  */
 
 #define LOG_TAG "gyro"
@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 #include <math.h>
 
 #include "gyroscope.h"

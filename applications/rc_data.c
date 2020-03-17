@@ -26,6 +26,7 @@ ControlCmd_Type ControlCmd = {
 Rocker_Type Rocker; // 摇杆数据结构体
 
 uint8 RC_Control_Data[Recv_Date_Len] = {0};
+uint8 Frame_EndFlag = 0; //接收数据包结束标志 
 uint8 Control_RxCheck = 0; //尾校验字
 
 /**

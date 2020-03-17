@@ -2,7 +2,7 @@
  * @Description: 主程序
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime : 2020-02-16 20:36:58
+ * @LastEditTime: 2020-03-17 21:31:43
  * @LastEditors: chenxi
  */
 
@@ -19,6 +19,7 @@
 #include "../applications/I2C_PWM.h"
 #include "../applications/sensor.h"
 #include "../applications/server.h"
+#include "../applications/propeller.h"
 
 #include <wiringPi.h>
 
@@ -43,19 +44,11 @@ void easyloggerInit(void)
 
 void *I2C_PWM_callback_fun(void *arg)
 {
-  I2C_PWM_Init();
-  I2C_PWM_SetPWMFreq(50.0);
-  delay(100); // 没有延时可能会导致 PWM 调节出现问题
-
-  int i = 0;
-  while (1)
+  // 测试
+  for (int i = PropellerPower_Med - 10; i < PropellerPower_Med + 10; i++)
   {
-    I2C_PWM_SetPWM(0, i, 4096 - i);
-    if (i <= 4096)
-      i += 32;
-    else
-      i = 0;
-    delay(1000);
+    I2C_PWM_SetPWM(1, 0, i);
+    delay(2000);
   }
   return NULL;
 }
@@ -69,8 +62,11 @@ int main()
     return 1;
   }
 
-  sensor_thread_init(); //初始化传感器
-  server_thread_init(); //初始化服务器
+  Propeller_Init();
+  I2C_PWM_callback_fun(NULL);
+
+  // sensor_thread_init(); //初始化传感器
+  // server_thread_init(); //初始化服务器
 
   while (1)
   {
