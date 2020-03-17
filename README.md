@@ -10,29 +10,43 @@
 
 # 2. 使用
 
-## 2.1 动态库设置
+## 2.1 克隆 `WiringNP` 并安装
+
+```shell
+$ git clone https://github.com/chenxiqiyuan/WiringNP
+$ cd WiringNP/
+$ chmod 755 build
+$ ./build
+```
+
+## 2.2 动态库设置
+
 先进入 `easylogger` 文件夹中，输入命令 `make` 进行编译：
+
 ```shell
 $ cd easylogger
 $ make
 ```
 
-再将 easylogger 生成的动态库拷贝至系统库下：
+再将 `easylogger` 文件夹内生成的动态库拷贝至系统库下：
+
 ```shell
 $ sudo cp easylogger/libeasylogger.so /usr/lib/
 ```
 
-## 2.2 编译与执行
+## 2.3 编译与执行
 
 ```shell
 make && sudo ./NanoPiMain
 ```
 
 若提示无法打开某设备，输入 `sudo npi-config` 中 `Advanced Options` 中使能相关设备：
+
 ```shell
-& sudo npi-config
+$ sudo npi-config
 ```
-## 2.3 注意事项
+
+## 2.4 注意事项
 
 有时修改会后编译执行会出问题，未出现修改部分效果，此时 `make clean` 后再编译运行即可。
 
@@ -46,7 +60,6 @@ make && sudo ./NanoPiMain
   - [ ] 探照灯
   - [ ] Key
   - [x] Buzzer
-  - [ ] 拨码开关
   - [x] 深度传感器
   - [x] 显示屏
   - [x] 九轴
@@ -56,7 +69,9 @@ make && sudo ./NanoPiMain
   - [x] CPU状况
     - [x] CPU温度
     - [x] CPU使用率
+  - [x] 推进器
 - [ ] 整体进度
   - [x] 传感器整合
   - [ ] 系统自检
   - [ ] NanoPi与上位机通信
+  - [ ] 根据控制数据控制推进器

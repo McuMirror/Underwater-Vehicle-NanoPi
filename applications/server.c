@@ -2,7 +2,7 @@
  * @Description: 服务器线程
  * @Author: chenxi
  * @Date: 2020-02-15 19:57:26
- * @LastEditTime : 2020-02-16 20:43:06
+ * @LastEditTime: 2020-03-18 00:06:49
  * @LastEditors: chenxi
  */
 
@@ -37,11 +37,10 @@ void print_hex_data(char *name, uint8 *data, int len)
 {
     printf("%s:", name);
     for(int i = 0; i < len; i++){
-        printf("%x ", data[i]);
+        printf("%2x ", data[i]);
     }
     printf("\n");
 }
-
 
 void *send_thread(void *arg)
 {
@@ -78,7 +77,9 @@ void *recv_thread(void *arg)
             }
             return NULL;
         }
+
         print_hex_data("recv", recv_buff, RECE_DATA_LEN);
+
         Remote_Control_Data_Analysis(recv_buff);
     }
 
