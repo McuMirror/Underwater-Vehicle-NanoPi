@@ -25,9 +25,9 @@ ControlCmd_Type ControlCmd = {
 
 Rocker_Type Rocker; // 摇杆数据结构体
 
-uint8 RC_Control_Data[Recv_Date_Len] = {0};
+uint8 RC_Control_Data[RECE_DATA_LEN] = {0};
 uint8 Control_RxCheck = 0; //尾校验字
-
+uint8 recv_buff[RECE_DATA_LEN] = {0};
 /**
   * @brief  Remote_Control_Data_Analysis(控制数据解析)
   * @param  控制字符数据 uint8 *recv_buff
@@ -38,11 +38,11 @@ void Remote_Control_Data_Analysis(uint8 *recv_buff) //控制数据解析
 {
     if (recv_buff[0] == 0xAA && recv_buff[1] == 0x55 && recv_buff[2] == 0x10) //检测包头
     {
-        for (int i = 0; i < Recv_Date_Len - 1; i++)
+        for (int i = 0; i < RECE_DATA_LEN - 1; i++)
         {
             Control_RxCheck += recv_buff[i];
         }
-        if (Control_RxCheck == recv_buff[Recv_Date_Len]) //校验
+        if (Control_RxCheck == recv_buff[RECE_DATA_LEN]) //校验
         {
             ControlCmd.Depth_Lock = RC_Control_Data[3];     //深度锁定
             ControlCmd.Direction_Lock = RC_Control_Data[4]; //方向锁定

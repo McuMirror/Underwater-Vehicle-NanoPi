@@ -15,5 +15,6 @@ int sensor_thread_init(void);
 void print_sensor_info(void); // 打印传感器信息
 
 extern char *Depth_Sensor_Name[3];
+extern Sensor_Type Sensor;
 
 #endif

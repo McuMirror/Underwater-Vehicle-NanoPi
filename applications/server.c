@@ -10,7 +10,6 @@
 
 #include "../easylogger/inc/elog.h"
 #include "server.h"
-#include "sensor.h"
 #include "ret_data.h"
 #include "rc_data.h"
 
@@ -22,48 +21,43 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <pthread.h>
 
 #include <wiringPi.h>
 
-#define LISTEN_PORT 8000
+#define LISTEN_PORT 8888 
 
-static int socket_fd = -1, client_fd = -1;
-extern Sensor_Type Sensor;
-extern uint8 begin_buff[3];
-extern uint8 Return_Data[Send_Date_Len];
+static int socket_fd = -1;
+static int client_fd = -1;
 
-int Send_Buffer_Agreement(int fd, uint8 *begin_buff, uint8 *buff, uint8 len)
+uint8 return_data[RETURN_DATA_LEN] = {0xaa, 0x55, 0x16};//包头位固定数据
+
+void print_hex_data(char *name, uint8 *data, int len)
 {
-    uint8 Check_Byte = 0;
-
-    Check_Byte = Calculate_Check_Byte(begin_buff, buff, len); //计算校验位
-
-    if (write(client_fd, begin_buff, 3) == -1)
-    {
-        if (client_fd != -1)
-        {
-            log_i("client closed");
-            close(client_fd);
-            client_fd = -1;
-        }
-        return -1;
+    printf("%s:", name);
+    for(int i = 0; i < len; i++){
+        printf("%x ", data[i]);
     }
-
-    write(client_fd, buff, len);      //发送数据包
-    write(client_fd, &Check_Byte, 1); //发送校验位
-    return 0;
+    printf("\n");
 }
+
 
 void *send_thread(void *arg)
 {
     while (1)
     {
-        Convert_Return_Computer_Data(Return_Data);
-        if (Send_Buffer_Agreement(client_fd, begin_buff, Return_Data, Send_Date_Len) == -1)
-        {
+        convert_return_computer_data(return_data);
+
+        if (write(client_fd, return_data, RETURN_DATA_LEN) == -1){
+            if (client_fd != -1){
+                log_i("client closed");
+                close(client_fd);
+                client_fd = -1;
+            }
             return NULL;
         }
+        print_hex_data("send", return_data, RETURN_DATA_LEN);
         delay(1000);
     }
     return NULL;
@@ -71,10 +65,10 @@ void *send_thread(void *arg)
 
 void *recv_thread(void *arg)
 {
-    uint8 recv_buff[Recv_Date_Len] = {0};
+
     while (1)
     {
-        if (recv(client_fd, recv_buff, Recv_Date_Len, 0) == -1)
+        if (recv(client_fd, recv_buff, RECE_DATA_LEN, 0) == -1)
         {
             if (client_fd != -1)
             {
@@ -84,6 +78,7 @@ void *recv_thread(void *arg)
             }
             return NULL;
         }
+        print_hex_data("recv", recv_buff, RECE_DATA_LEN);
         Remote_Control_Data_Analysis(recv_buff);
     }
 
@@ -92,11 +87,15 @@ void *recv_thread(void *arg)
 
 void *server_thread(void *arg)
 {
-    struct sockaddr_in serverAddr;
+    static struct sockaddr_in serverAddr;
+    static struct sockaddr_in clientAddr;//用于保存客户端的地址信息
+    static unsigned int AddrLen;
+	static int iClientNum;//记录客户端连接的次数
 
-    if ((socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1)
-    {
-
+    pthread_t send_tid;
+    pthread_t recv_tid;
+    
+    if ((socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1){
         log_e("create server socket error:%s(errno:%d)\n", strerror(errno), errno);
         exit(0);
     }
@@ -107,48 +106,43 @@ void *server_thread(void *arg)
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY); //auto get local server ip addr
     serverAddr.sin_port = htons(LISTEN_PORT);
 
-    if (bind(socket_fd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1)
-    {
+    if (bind(socket_fd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1){
         log_e("bind socket error:%s(errno:%d)\n", strerror(errno), errno);
         exit(0);
     }
 
-    if (listen(socket_fd, 10) == -1)
-    {
+    if (listen(socket_fd, 10) == -1){
         log_e("listen socket error :%s(errno:%d)\n", strerror(errno), errno);
         exit(0);
     }
 
-    log_i("waiting for client to connect");
+    log_i("waiting for client to connect, server port: [%d]", LISTEN_PORT);
     while (1)
     {
-        if ((client_fd = accept(socket_fd, (struct sockaddr *)NULL, NULL)) == -1)
-        {
+        AddrLen = sizeof(struct sockaddr);
+        if ((client_fd = accept(socket_fd, (struct sockaddr *)&clientAddr, &AddrLen)) == -1){
             log_e("accept socket error:%s(errorno:%d)", strerror(errno), errno);
             continue;
         }
+        iClientNum++;
         log_d("client connected: %d", client_fd);
+        log_i("get connet from clinet [NO.%d] : [%s]", iClientNum, inet_ntoa(clientAddr.sin_addr));//打印客户端连接次数及IP地址
 
-        pthread_t send_tid;
-        if (pthread_create(&send_tid, NULL, send_thread, NULL) == -1)
-        {
+
+        if (pthread_create(&send_tid, NULL, send_thread, NULL) == -1){
             log_e("send_thread create error!");
             return NULL;
         }
-        if (pthread_detach(send_tid))
-        {
+        if (pthread_detach(send_tid)){
             log_w("send_thread detach failed...");
             return NULL;
         }
 
-        pthread_t recv_tid;
-        if (pthread_create(&recv_tid, NULL, recv_thread, NULL) == -1)
-        {
+        if (pthread_create(&recv_tid, NULL, recv_thread, NULL) == -1){
             log_e("recv_thread create error!");
             return NULL;
         }
-        if (pthread_detach(recv_tid))
-        {
+        if (pthread_detach(recv_tid)){
             log_w("recv_thread detach failed...");
             return NULL;
         }
@@ -160,13 +154,12 @@ void *server_thread(void *arg)
 int server_thread_init(void)
 {
     pthread_t server_tid;
-    if (pthread_create(&server_tid, NULL, server_thread, NULL) == -1)
-    {
+    if (pthread_create(&server_tid, NULL, server_thread, NULL) == -1){
         log_e("server_thread create error!");
         return 1;
     }
-    if (pthread_detach(server_tid))
-    {
+
+    if (pthread_detach(server_tid)){
         log_w("server_thread detach failed...");
         return -2;
     }

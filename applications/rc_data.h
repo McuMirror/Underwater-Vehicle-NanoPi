@@ -11,8 +11,10 @@
 
 #include "../user/DataType.h"
 
-#define Recv_Date_Len 20 // 数据包长度【包含包头、长度位、校验位】
+#define RECE_DATA_LEN 20 // 数据包长度【包含包头、长度位、校验位】
                          // 包头：3 包体：16 校验字：1
+
+
 
 typedef struct
 {
@@ -58,5 +60,6 @@ void Control_Cmd_Clear(ControlCmd_Type *cmd);        //控制命令清零
 extern Rocker_Type Rocker;
 extern ControlCmd_Type ControlCmd;
 extern ReceiveData_Type ReceiveData;
+extern uint8 recv_buff[RECE_DATA_LEN];
 
 #endif
