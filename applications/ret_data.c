@@ -12,8 +12,6 @@
 #include "ret_data.h"
 #include "sensor.h"
 
-
-
 uint8 device_hint_flag = 0x0; //设备提示字符
 
 
@@ -37,14 +35,15 @@ uint8 get_decimal(float data)
 uint8 calculate_check_sum(uint8 *buff, uint8 len)
 {
     uint8 sum = 0;
-    for (int i = 0; i < len; i++){
+    for (int i = 0; i < len; i++)
+    {
         sum += buff[i];
     }
     return sum;
 }
 
 /**********************   发送到PC端   ***********************/
-void convert_return_computer_data(uint8 *buff) // 转换需要返回上位机数据
+void convert_rov_data(uint8 *buff) // 转换需要返回上位机数据
 {
     short troll; //暂存数据
     short tpitch;

@@ -29,12 +29,12 @@ uint8 RC_Control_Data[RECE_DATA_LEN] = {0};
 uint8 Control_RxCheck = 0; //尾校验字
 uint8 recv_buff[RECE_DATA_LEN] = {0};
 /**
-  * @brief  Remote_Control_Data_Analysis(控制数据解析)
+  * @brief  remote_control_data_analysis(控制数据解析)
   * @param  控制字符数据 uint8 *recv_buff
   * @retval None
   * @notice 从第四个字节开始为控制字符
   */
-void Remote_Control_Data_Analysis(uint8 *recv_buff) //控制数据解析
+void remote_control_data_analysis(uint8 *recv_buff) //控制数据解析
 {
     if (recv_buff[0] == 0xAA && recv_buff[1] == 0x55 && recv_buff[2] == 0x10) //检测包头
     {

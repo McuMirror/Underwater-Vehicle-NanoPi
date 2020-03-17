@@ -54,7 +54,7 @@ typedef struct
     uint8 Reserve;        //【机械臂】0x01 张开、    0x02 关闭、  0x00表示不动作（默认）
 } ControlCmd_Type;
 
-void Remote_Control_Data_Analysis(uint8 *recv_buff); //控制数据解析
+void remote_control_data_analysis(uint8 *recv_buff); //控制数据解析
 void Control_Cmd_Clear(ControlCmd_Type *cmd);        //控制命令清零
 
 extern Rocker_Type Rocker;

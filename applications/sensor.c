@@ -9,17 +9,16 @@
 #define LOG_TAG "sensor"
 
 #include "../easylogger/inc/elog.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <pthread.h>
-
-#include "sensor.h"
-#include "gyroscope.h"
 #include "../drivers/drv_cpu_status.h"
 #include "../drivers/drv_spl1301.h"
 #include "../drivers/drv_adc.h"
 #include "../Tools/filter.h"
+#include "sensor.h"
+#include "gyroscope.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <pthread.h>
 
 #include <wiringPi.h>
 #include <wiringSerial.h>
@@ -30,7 +29,7 @@ char *Depth_Sensor_Name[3] = {"MS5837", "SPL1301", "null"};
 // extern struct rt_event init_event; /* ALL_init 事件控制块 */
 
 Sensor_Type Sensor; //传感器参数
-float temp_current = 0.0f;
+
 
 /*----------------------- Function Implement --------------------------------*/
 /**
@@ -42,29 +41,21 @@ float temp_current = 0.0f;
 void *sensor_lowSpeed_callback_fun(void *arg)
 {
     // TODO
-
     adc_init(); //ADC电压采集初始化
     while (1)
     {
-        // 不必再延时，get_voltage_value() 内已有延时
-        Sensor.CPU.Temperature = get_cpu_temp();          //获取CPU温度
+        Sensor.CPU.Usage = get_cpu_usage();
+        Sensor.CPU.Temperature = get_cpu_temp(); 
+
         Sensor.PowerSource.Voltage = get_voltage_value(); //获取电源电压值
-
-        // if (Sensor.PowerSource.Voltage > 6.0f) //当未接入电源时，不检测电流值
-        // {
-
         Sensor.PowerSource.Current = get_current_value();
-        temp_current = Sensor.PowerSource.Current;
-        Sensor.PowerSource.Current = KalmanFilter(&Sensor.PowerSource.Current);
-        // 电流值 进行卡尔曼滤波【该卡尔曼滤波调节r的值，滞后性相对较大】
 
-        // }
     }
     return NULL;
 }
 
 //深度传感器数据转换
-void Depth_Sensor_Data_Convert(void)
+void depthSensor_Data_Convert(void)
 {
     static uint32 value[10] = {0};
     static uint8 ON_OFF = 0; //自锁开关
@@ -91,20 +82,22 @@ void Depth_Sensor_Data_Convert(void)
     }
     else if (MS5837 == Sensor.DepthSensor.Type) //使用MS5837
     {
+
     }
 }
 
-void *DepthSensor_callback_fun(void *arg)
+void *depthSensor_callback_fun(void *arg)
 {
     if (MS5837 == Sensor.DepthSensor.Type) // 深度传感器类型判定
     {
+
     }
     else if (SPL1301 == Sensor.DepthSensor.Type)
     {
         spl1301_init();
         while (1)
         {
-            Depth_Sensor_Data_Convert(); // 深度数据转换
+            depthSensor_Data_Convert(); // 深度数据转换
             delay(20);
         }
     }
@@ -116,9 +109,9 @@ void *DepthSensor_callback_fun(void *arg)
     return NULL;
 }
 
-void *JY901_callback_fun(void *arg)
+void *jy901_callback_fun(void *arg)
 {
-    int fd = JY901_Init();
+    int fd = jy901_init();
     while (1)
     {
         delay(20);
@@ -130,60 +123,44 @@ void *JY901_callback_fun(void *arg)
     return NULL;
 }
 
-void *cpu_usage_callback_fun(void *arg)
-{
-    Sensor.CPU.Usage = get_cpu_usage();
-    return NULL;
-}
+
 
 int sensor_thread_init(void)
 {
+    pthread_t depthSensor_tid;
+    pthread_t jy901_tid;
+    pthread_t sensor_lowSpeed_tid;
+
     memset(&Sensor, 0, sizeof(Sensor_Type));
     Sensor.DepthSensor.Type = SPL1301;
 
-    pthread_t cpu_usage_tid;
-    if (pthread_create(&cpu_usage_tid, NULL, cpu_usage_callback_fun, NULL) == -1)
-    {
-        log_e("cpu_usage_thread create error!");
-        return 1;
-    }
-    if (pthread_detach(cpu_usage_tid))
-    {
-        log_w("cpu_usage_thread detach failed...");
-        return -2;
-    }
-
-    pthread_t JY901_tid;
-    if (pthread_create(&JY901_tid, NULL, JY901_callback_fun, NULL) == -1)
+    if (pthread_create(&jy901_tid, NULL, jy901_callback_fun, NULL) < 0)
     {
         log_e("JY901_thread create error!");
         return 1;
     }
-    if (pthread_detach(JY901_tid))
+    if (pthread_detach(jy901_tid))
     {
         log_w("JY901_thread detach failed...");
         return -2;
     }
 
-    pthread_t sensor_lowSpeed_tid;
-    if (pthread_create(&sensor_lowSpeed_tid, NULL, sensor_lowSpeed_callback_fun, NULL) == -1)
+    if (pthread_create(&sensor_lowSpeed_tid, NULL, sensor_lowSpeed_callback_fun, NULL) < 0)
     {
         log_e("sensor_lowSpeed_thread create error!");
         return 1;
     }
-    if (pthread_detach(sensor_lowSpeed_tid))
-    {
+    if (pthread_detach(sensor_lowSpeed_tid)){
         log_w("sensor_lowSpeed_thread detach failed...");
         return -2;
     }
 
-    pthread_t DepthSensor_tid;
-    if (pthread_create(&DepthSensor_tid, NULL, DepthSensor_callback_fun, NULL) == -1)
+    if (pthread_create(&depthSensor_tid, NULL, depthSensor_callback_fun, NULL) < 0)
     {
         log_e("DepthSensor_thread create error!");
         return 1;
     }
-    if (pthread_detach(DepthSensor_tid))
+    if (pthread_detach(depthSensor_tid))
     {
         log_w("DepthSensor_thread detach failed...");
         return -2;
@@ -195,31 +172,31 @@ int sensor_thread_init(void)
 // 打印传感器信息
 void print_sensor_info(void)
 {
-    log_i("      variable      |   value");
-    log_i("--------------------|------------");
+    log_d("      variable      |   value");
+    log_d("--------------------|------------");
 
-    log_i("        Roll        |  %+0.3f", Sensor.JY901.Euler.Roll);
-    log_i("        Pitch       |  %+0.3f", Sensor.JY901.Euler.Pitch);
-    log_i("        Yaw         |  %+0.3f", Sensor.JY901.Euler.Yaw);
-    log_i("--------------------|------------");
-    log_i("        Acc.x       |  %+0.3f", Sensor.JY901.Acc.x);
-    log_i("        Acc.y       |  %+0.3f", Sensor.JY901.Acc.y);
-    log_i("        Acc.z       |  %+0.3f", Sensor.JY901.Acc.z);
-    log_i("--------------------|------------");
-    log_i("       Gyro.x       |  %+0.3f", Sensor.JY901.Gyro.x);
-    log_i("       Gyro.y       |  %+0.3f", Sensor.JY901.Gyro.y);
-    log_i("       Gyro.z       |  %+0.3f", Sensor.JY901.Gyro.z);
-    log_i("  JY901_Temperature |  %+0.3f", Sensor.JY901.Temperature);
-    log_i("--------------------|------------");
-    log_i("       Voltage      |  %0.3f", Sensor.PowerSource.Voltage); // 电压
-    log_i("       Current      |  %0.3f", Sensor.PowerSource.Current); // 电流
-    log_i("--------------------|------------");
-    log_i(" Depth Sensor Type  |  %s", Depth_Sensor_Name[Sensor.DepthSensor.Type]); // 深度传感器类型
-    log_i(" Water Temperature  |  %0.3f", Sensor.DepthSensor.Temperature);          // 水温
-    log_i("sensor_Init_Pressure|  %0.3f", Sensor.DepthSensor.Init_PessureValue);    // 深度传感器初始压力值
-    log_i("   sensor_Pressure  |  %0.3f", Sensor.DepthSensor.PessureValue);         // 深度传感器当前压力值
-    log_i("        Depth       |  %0.3f", Sensor.DepthSensor.Depth);                // 深度值
-    log_i("--------------------|------------");
-    log_i("   CPU.Temperature  |  %0.3f", Sensor.CPU.Temperature); // CPU温度
-    log_i("      CPU.Usages    |  %0.3f", Sensor.CPU.Usage);       // CPU使用率
+    log_d("        Roll        |  %+0.3f", Sensor.JY901.Euler.Roll);
+    log_d("        Pitch       |  %+0.3f", Sensor.JY901.Euler.Pitch);
+    log_d("        Yaw         |  %+0.3f", Sensor.JY901.Euler.Yaw);
+    log_d("--------------------|------------");
+    log_d("        Acc.x       |  %+0.3f", Sensor.JY901.Acc.x);
+    log_d("        Acc.y       |  %+0.3f", Sensor.JY901.Acc.y);
+    log_d("        Acc.z       |  %+0.3f", Sensor.JY901.Acc.z);
+    log_d("--------------------|------------");
+    log_d("       Gyro.x       |  %+0.3f", Sensor.JY901.Gyro.x);
+    log_d("       Gyro.y       |  %+0.3f", Sensor.JY901.Gyro.y);
+    log_d("       Gyro.z       |  %+0.3f", Sensor.JY901.Gyro.z);
+    log_d("  JY901_Temperature |  %+0.3f", Sensor.JY901.Temperature);
+    log_d("--------------------|------------");
+    log_d("       Voltage      |  %0.3f",  Sensor.PowerSource.Voltage); // 电压
+    log_d("       Current      |  %0.3f",  Sensor.PowerSource.Current); // 电流
+    log_d("--------------------|------------");
+    log_d(" Depth Sensor Type  |  %s",     Depth_Sensor_Name[Sensor.DepthSensor.Type]); // 深度传感器类型
+    log_d(" Water Temperature  |  %0.3f",  Sensor.DepthSensor.Temperature);          // 水温
+    log_d("sensor_Init_Pressure|  %0.3f",  Sensor.DepthSensor.Init_PessureValue);    // 深度传感器初始压力值
+    log_d("   sensor_Pressure  |  %0.3f",  Sensor.DepthSensor.PessureValue);         // 深度传感器当前压力值
+    log_d("        Depth       |  %0.3f",  Sensor.DepthSensor.Depth);                // 深度值
+    log_d("--------------------|------------");
+    log_d("   CPU.Temperature  |  %0.3f",  Sensor.CPU.Temperature); // CPU温度
+    log_d("      CPU.Usages    |  %0.3f",  Sensor.CPU.Usage);       // CPU使用率
 }
