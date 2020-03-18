@@ -2,7 +2,7 @@
  * @Description: 处理接收数据
  * @Author: chenxi
  * @Date: 2020-02-17 15:13:28
- * @LastEditTime: 2020-02-17 15:13:28
+ * @LastEditTime: 2020-03-17 22:15:46
  * @LastEditors: chenxi
  */
 
@@ -61,5 +61,6 @@ extern Rocker_Type Rocker;
 extern ControlCmd_Type ControlCmd;
 extern ReceiveData_Type ReceiveData;
 extern uint8 recv_buff[RECE_DATA_LEN];
+extern uint8 Frame_EndFlag;
 
 #endif

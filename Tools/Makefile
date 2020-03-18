@@ -43,13 +43,13 @@ OBJ=$(patsubst %.c, %.o, $(SRC))
 #链接命令
 all:$(BIN)
 $(BIN):$(OBJ)
-	$(CO) $@ $^ $(LFLAG)
+	@$(CO) $@ $^ $(LFLAG)
 
 #编译命令
 $(DIR)/%.o:$(DIR)/%.c
-	$(CC) $@ -c $< $(CFLAG)
+	@$(CC) $@ -c $< $(CFLAG)
 
 #清除无用文件
 .PHONY:clean
 clean:
-	rm -f $(OBJ) $(BIN)
+	@rm -f $(OBJ) $(BIN)
