@@ -6,6 +6,15 @@
         "filter.h": "c",
         "server.h": "c",
         "sensor.h": "c",
-        "datatype.h": "c"
+        "datatype.h": "c",
+        "propellercontrol.h": "c",
+        "pwm.h": "c",
+        "propeller.h": "c",
+        "focus.h": "c",
+        "rc_data.h": "c",
+        "pid.h": "c",
+        "led.h": "c",
+        "devicethread.h": "c",
+        "iodevices.h": "c"
     }
 }

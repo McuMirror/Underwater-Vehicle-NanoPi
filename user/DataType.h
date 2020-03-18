@@ -2,7 +2,7 @@
  * @Description: 各类数据结构定义文件
  * @Author: chenxi
  * @Date: 2020-02-08 21:46:49
- * @LastEditTime : 2020-02-10 16:58:46
+ * @LastEditTime: 2020-03-17 22:12:53
  * @LastEditors: chenxi
  */
 
@@ -165,12 +165,8 @@ typedef enum
 
 /* ---------------【推进器 参数】--------------*/
 
-#define PropellerPower_Med 1500
-#define PropellerPower_Min 1000
-#define PropellerPower_Max 2000
-
-/* 最重要定义 直接从设定好的模式(Flash中读取)*/
-extern volatile uint8 VehicleMode; //【FOUR_AXIS】 or 【SIX_AXIS】
-extern volatile uint8 WorkMode;	//【WORK】or 【DEBUG】
+#define PropellerPower_Med 287 // 停止 284-291
+#define PropellerPower_Min 172 // 反向最小值【反向推力最大】
+#define PropellerPower_Max 429 // 正向最大值
 
 #endif

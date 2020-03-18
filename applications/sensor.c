@@ -2,7 +2,7 @@
  * @Description: 开启各个传感器线程函数、打印传感器信息
  * @Author: chenxi
  * @Date: 2020-02-09 12:30:19
- * @LastEditTime : 2020-02-16 20:42:00
+ * @LastEditTime: 2020-03-18 10:53:14
  * @LastEditors: chenxi
  */
 
@@ -40,7 +40,6 @@ Sensor_Type Sensor; //传感器参数
   */
 void *sensor_lowSpeed_callback_fun(void *arg)
 {
-    // TODO
     adc_init(); //ADC电压采集初始化
     while (1)
     {

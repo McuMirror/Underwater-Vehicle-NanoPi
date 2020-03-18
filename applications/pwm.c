@@ -2,8 +2,8 @@
  * @Description: 通过 I2C 控制 PCA9685 来使用 PWM 功能
  * @Author: chenxi
  * @Date: 2020-02-10 12:15:34
- * @LastEditTime : 2020-02-10 17:04:47
- * @LastEditors  : chenxi
+ * @LastEditTime: 2020-03-18 10:53:56
+ * @LastEditors: chenxi
  */
 
 #define LOG_TAG "pwm"
@@ -48,7 +48,7 @@ int I2C_PWM_Init(void)
 
 void I2C_PWM_Reset(void)
 {
-  wiringPiI2CWriteReg8(i2c_pwm_fd, 0x0, 0x0);
+  wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, 0x0);
 }
 
 void I2C_PWM_SetPWMFreq(float freq)
@@ -68,8 +68,9 @@ void I2C_PWM_SetPWMFreq(float freq)
   uint16 newmode = (oldmode & 0x7F) | 0x10;                     // sleep
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, newmode);     // go to sleep
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_PRESCALE, prescale); // set the prescaler
+  delay(50);
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, oldmode);
-  delay(5);
+  delay(50);
   wiringPiI2CWriteReg8(i2c_pwm_fd, PCA9685_MODE1, oldmode | 0xa1); //  This sets the MODE1 register to turn on auto increment.
   // This is why the beginTransmission below was not working.
 }
@@ -84,53 +85,4 @@ void I2C_PWM_SetPWM(uint16 num, uint32 on, uint32 off)
   wiringPiI2CWriteReg8(i2c_pwm_fd, reg + 3, off >> 8);
 
   log_d("SetPWM %2d, on %4d, off %4d", num, on, off);
-}
-
-// Sets pin without having to deal with on/off tick placement and properly handles
-// a zero value as completely off.  Optional invert parameter supports inverting
-// the pulse for sinking to ground.  Val should be a value from 0 to 4095 inclusive.
-
-// unsigned char invert bool值
-void I2C_PWM_SetPin(uint16 num, uint16 val, uint16 invert)
-{
-  // TODO
-
-  /*
-  // Clamp value between 0 and 4095 inclusive.
-  val = min(val, 4095);
-  if (invert)
-  {
-    if (val == 0)
-    {
-      // Special value for signal fully on.
-      setPWM(num, 4096, 0);
-    }
-    else if (val == 4095)
-    {
-      // Special value for signal fully off.
-      setPWM(num, 0, 4096);
-    }
-    else
-    {
-      setPWM(num, 0, 4095 - val);
-    }
-  }
-  else
-  {
-    if (val == 4095)
-    {
-      // Special value for signal fully on.
-      setPWM(num, 4096, 0);
-    }
-    else if (val == 0)
-    {
-      // Special value for signal fully off.
-      setPWM(num, 0, 4096);
-    }
-    else
-    {
-      setPWM(num, 0, val);
-    }
-  }
-  */
 }
