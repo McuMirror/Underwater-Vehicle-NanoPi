@@ -8,17 +8,19 @@
 
 #define LOG_TAG "main"
 
-#include "elog.h"
+#include "../easylogger/inc/elog.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <pthread.h>
 
 #include "DataType.h"
 
-#include "../applications/I2C_PWM.h"
+#include "../applications/pwm.h"
 #include "../applications/sensor.h"
 #include "../applications/server.h"
+#include "../applications/gyroscope.h"
 
 #include <wiringPi.h>
 
@@ -32,7 +34,7 @@ void easyloggerInit(void)
   elog_set_fmt(ELOG_LVL_ERROR, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
   elog_set_fmt(ELOG_LVL_WARN, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
   elog_set_fmt(ELOG_LVL_INFO, ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
-  elog_set_fmt(ELOG_LVL_DEBUG, ELOG_FMT_ALL & ~ELOG_FMT_FUNC);
+  elog_set_fmt(ELOG_LVL_DEBUG, ELOG_FMT_TIME);
   elog_set_fmt(ELOG_LVL_VERBOSE, ELOG_FMT_ALL & ~ELOG_FMT_FUNC);
 #ifdef ELOG_COLOR_ENABLE
   elog_set_text_color_enabled(true);
@@ -60,10 +62,13 @@ void *I2C_PWM_callback_fun(void *arg)
   return NULL;
 }
 
+
+
+
 int main()
 {
   easyloggerInit();
-  if (wiringPiSetup() == -1)
+  if (wiringPiSetup() < 0)
   {
     log_e("Unable to start wiringPi: %s", strerror(errno));
     return 1;
@@ -74,9 +79,7 @@ int main()
 
   while (1)
   {
-    sleep(2);
-    // print_sensor_info();
+    sleep(1);
   }
-
   return 0;
 }

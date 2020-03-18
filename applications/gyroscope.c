@@ -49,7 +49,7 @@ int jy901_init(void)
 		log_e("Unable to open serial device: %s", strerror(errno));
 		return -1;
 	}
-	log_i("jy901_init\n");
+	log_i("jy901_init");
 	log_d("jy901_fd:%d", jy901_fd);
 
 	if (jy901_fd < 0)

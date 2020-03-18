@@ -25,13 +25,14 @@ $ sudo cp easylogger/libeasylogger.so /usr/lib/
 ## 2.2 编译与执行
 
 ```shell
-make && sudo ./NanoPiMain
+make && sudo ./rovmaster
 ```
 
-若提示无法打开某设备，输入 `sudo npi-config` 中 `Advanced Options` 中使能相关设备：
+若提示无法打开某设备，输入 `sudo npi-config` > `Advanced Options` 中使能相关设备：
 ```shell
 & sudo npi-config
 ```
+若时区不对，也可以在 `npi-config` > `Localisation Options` > `Change Timezone` 中选择修改。
 ## 2.3 注意事项
 
 有时修改会后编译执行会出问题，未出现修改部分效果，此时 `make clean` 后再编译运行即可。

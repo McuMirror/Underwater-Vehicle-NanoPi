@@ -40,7 +40,7 @@ int spl1301_init(void)
     spl1301_fd = 0;
     spl1301_fd = wiringPiI2CSetupInterface(spl1301_I2C, HW_ADR);
 
-    log_i("[%s %s] [%s: %s: %d]", __DATE__, __TIME__, __FILE__, __func__, __LINE__);
+    log_i("spl1301_init");
     log_d("spl1301_fd:%d", spl1301_fd);
 
     if (spl1301_fd < 0)
