@@ -146,18 +146,13 @@ struct SQ
 	short q[4];
 };
 
-/*-----------------MSH命令函数----------------*/
-/* Get时间  time */
-void print_time(void);
 
 /*-----------------初始化函数----------------*/
-int JY901_Init(void);
+int jy901_init(void);
 
 /*-----------------应用函数----------------*/
-void JY901_Convert(JY901_Type *pArr);
 void CopeSerial2Data(unsigned char Data);
-//void get_speed(float *acc,float *speed);/* 粗略 获取轴速度 */
-//void get_zspeed(void);
+void jy901_convert(JY901_Type *pArr);
 
 //extern JY901_Type JY901; //JY901真实值结构体
 extern short Compass_Offset_Angle; //指南针补偿角度   由于受到板子磁场干扰，需要加一个补偿角度  -360 ~ +360
