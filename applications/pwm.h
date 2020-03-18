@@ -6,8 +6,8 @@
  * @LastEditors: chenxi
  */
 
-#ifndef __I2C_PWM__
-#define __I2C_PWM__
+#ifndef __PWM_H__
+#define __PWM_H__
 
 #include "..//user//DataType.h"
 

@@ -6,7 +6,7 @@
  * @LastEditors: chenxi
  */
 
-#define LOG_TAG "I2C_PWM"
+#define LOG_TAG "pwm"
 
 #include "../easylogger/inc/elog.h"
 #include <stdio.h>
@@ -18,7 +18,7 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 
-#include "I2C_PWM.h"
+#include "pwm.h"
 
 static int i2c_pwm_fd;
 
