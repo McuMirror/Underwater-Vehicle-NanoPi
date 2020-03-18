@@ -13,6 +13,8 @@
         "focus.h": "c",
         "rc_data.h": "c",
         "pid.h": "c",
-        "led.h": "c"
+        "led.h": "c",
+        "devicethread.h": "c",
+        "iodevices.h": "c"
     }
 }

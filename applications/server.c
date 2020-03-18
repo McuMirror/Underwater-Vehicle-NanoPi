@@ -2,7 +2,7 @@
  * @Description: 服务器线程
  * @Author: chenxi
  * @Date: 2020-02-15 19:57:26
- * @LastEditTime: 2020-03-18 00:06:49
+ * @LastEditTime: 2020-03-18 19:17:09
  * @LastEditors: chenxi
  */
 
@@ -128,7 +128,6 @@ void *server_thread(void *arg)
         iClientNum++;
         log_d("client connected: %d", client_fd);
         log_i("get connet from clinet [NO.%d] : [%s]", iClientNum, inet_ntoa(clientAddr.sin_addr));//打印客户端连接次数及IP地址
-
 
         if (pthread_create(&send_tid, NULL, send_thread, NULL) == -1){
             log_e("send_thread create error!");

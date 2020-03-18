@@ -2,7 +2,7 @@
  * @Description: 推进器设备
  * @Author: chenxi
  * @Date: 2020-03-01 22:36:16
- * @LastEditTime: 2020-03-17 23:25:22
+ * @LastEditTime: 2020-03-18 19:22:50
  * @LastEditors: chenxi
  */
 
@@ -58,17 +58,6 @@ int Extractor_Value = 0; //吸取器推进器的值
 ********************************************/
 void Propeller_Init(void) //这边都需要经过限幅在给定  原先为2000->1500
 {
-	I2C_PWM_Init();
-	I2C_PWM_SetPWMFreq(50.0);
-	delay(1000); // 没有延时可能会导致 PWM 调节出现问题
-
-	// PWM 初始置 0
-	for (int i = 0; i < 16; i++)
-	{
-		I2C_PWM_SetPWM(i, 0, 0);
-	}
-	delay(2000);
-
 	// 初始化推进器
 	I2C_PWM_SetPWM(0, 0, PropellerPower_Max); //最高转速信号  水平推进器1号  右上
 	I2C_PWM_SetPWM(5, 0, PropellerPower_Max); //最高转速信号  水平推进器2号  左下
@@ -92,11 +81,11 @@ void Propeller_Init(void) //这边都需要经过限幅在给定  原先为2000-
 
 	I2C_PWM_SetPWM(10, 0, PropellerPower_Med); //机械臂
 
-	// TODO 是什么
+	// TODO 云台怎么初始化
 	// TIM4_PWM_CH3_D14(1500); //机械臂中值 1000~2000
 	// TIM4_PWM_CH4_D15(2000); //云台中值
 
-	delay(1000); //1s
+	delay(1000);
 
 	Propeller_Init_Flag = 1;
 	log_i("Propeller_init()");

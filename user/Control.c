@@ -1,8 +1,8 @@
 /*
- * @Description: 运动总控制
+ * @Description: 运动总控制（未完成）
  * @Author: chenxi
  * @Date: 2020-02-19 13:13:56
- * @LastEditTime: 2020-03-17 23:26:52
+ * @LastEditTime: 2020-03-18 19:32:35
  * @LastEditors: chenxi
  */
 

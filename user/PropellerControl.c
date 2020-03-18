@@ -1,8 +1,8 @@
 /*
- * @Description: 推进器控制
+ * @Description: 推进器控制（未完成）
  * @Author: chenxi
  * @Date: 2020-02-19 13:13:56
- * @LastEditTime: 2020-03-17 23:27:01
+ * @LastEditTime: 2020-03-18 10:26:06
  * @LastEditors: chenxi
  */
 #define LOG_TAG "PropellerControl"
@@ -148,7 +148,6 @@ uint16 Propeller_Output_Limit(int16 value)
 ********************************************/
 void Propeller_Output(void)
 {
-
 	PropellerPower.rightUp = Propeller_Output_Limit(PropellerPower.rightUp); //PWM限幅
 	PropellerPower.leftUp = Propeller_Output_Limit(PropellerPower.leftUp);
 	PropellerPower.rightDown = Propeller_Output_Limit(PropellerPower.rightDown);
@@ -184,7 +183,7 @@ void turnLeft(uint16 power) //左旋
 	PropellerPower.rightDown = PropellerDir.rightDown * (power) + PropellerError.rightDown;
 }
 
-void Propller_Stop(void) //推进器停转
+void Propeller_Stop(void) //推进器停转
 {
 	PropellerPower.leftUp = 0;
 	PropellerPower.rightUp = 0;
