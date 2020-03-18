@@ -15,7 +15,7 @@
 #include <string.h>
 
 #include "rc_data.h"
-#include "I2C_PWM.h"
+#include "pwm.h"
 
 #include <wiringPi.h>
 

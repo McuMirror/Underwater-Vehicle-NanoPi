@@ -2,7 +2,7 @@
  * @Description: 主程序
  * @Author: chenxi
  * @Date: 2020-01-01 13:06:46
- * @LastEditTime: 2020-03-18 19:31:30
+ * @LastEditTime: 2020-03-18 20:39:05
  * @LastEditors: chenxi
  */
 
@@ -17,7 +17,7 @@
 #include "DataType.h"
 #include "DeviceThread.h"
 
-#include "../applications/I2C_PWM.h"
+#include "../applications/pwm.h"
 #include "../applications/sensor.h"
 #include "../applications/server.h"
 #include "../applications/propeller.h"
@@ -67,7 +67,7 @@ int main()
   // I2C_PWM_callback_fun(NULL);
 
   // sensor_thread_init(); //初始化传感器
-  // server_thread_init(); //初始化服务器
+  server_thread_init(); //初始化服务器
   // devices_thread_init();
   
   while (1)

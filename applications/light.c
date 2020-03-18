@@ -2,7 +2,7 @@
  * @Description: 探照灯
  * @Author: chenxi
  * @Date: 2020-03-18 10:31:23
- * @LastEditTime: 2020-03-18 19:22:03
+ * @LastEditTime: 2020-03-18 20:27:23
  * @LastEditors: chenxi
  */
 
@@ -12,7 +12,7 @@
 #include "light.h"
 
 #include <stdlib.h>
-#include "I2C_PWM.h"
+#include "pwm.h"
 
 short light_value = 0;
 

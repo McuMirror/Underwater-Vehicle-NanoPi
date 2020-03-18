@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: chenxi
  * @Date: 2020-03-18 09:54:53
- * @LastEditTime: 2020-03-18 19:29:40
+ * @LastEditTime: 2020-03-18 20:28:46
  * @LastEditors: chenxi
  */
 
@@ -22,6 +22,7 @@
 #include "../applications/rc_data.h"
 #include "../applications/focus.h"
 #include "../applications/servo.h"
+#include "../applications/pwm.h"
 
 /**
   * @brief  propeller_thread(推进器控制任务函数)

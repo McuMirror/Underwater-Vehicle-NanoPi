@@ -17,7 +17,7 @@
 #include "ioDevices.h"
 #include "propeller.h"
 #include "ret_data.h"
-#include "I2C_PWM.h"
+#include "pwm.h"
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 

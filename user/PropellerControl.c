@@ -15,7 +15,7 @@
 
 #include "../applications/propeller.h"
 #include "../applications/rc_data.h"
-#include "../applications/I2C_PWM.h"
+#include "../applications/pwm.h"
 #include "../applications/PID.h"
 #include "../applications/ret_data.h"
 #include "../applications/sensor.h"
