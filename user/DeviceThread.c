@@ -9,6 +9,12 @@
 #define LOG_TAG "DeviceThread"
 
 #include "../easylogger/inc/elog.h"
+#include "../drivers/drv_pca9685.h"
+#include "../applications/propeller.h"
+#include "../applications/light.h"
+#include "../applications/rc_data.h"
+#include "../applications/focus.h"
+#include "../applications/servo.h"
 
 #include <wiringPi.h>
 #include <pthread.h>
@@ -17,12 +23,6 @@
 #include "Control.h"
 #include "PropellerControl.h"
 
-#include "../applications/propeller.h"
-#include "../applications/light.h"
-#include "../applications/rc_data.h"
-#include "../applications/focus.h"
-#include "../applications/servo.h"
-#include "../applications/pwm.h"
 
 /**
   * @brief  propeller_thread(推进器控制任务函数)
@@ -93,14 +93,14 @@ int devices_thread_init(void)
 {
     pthread_t devices_tid, propeller_tid;
     
-    I2C_PWM_Init();
-    I2C_PWM_SetPWMFreq(50.0);
+    pca9685Init();
+    pca9685PWMFreq(50.0);
     delay(1000); // 没有延时可能会导致 PWM 调节出现问题
 
     // PWM 初始置 0
     for (int i = 0; i < 16; i++)
     {
-        I2C_PWM_SetPWM(i, 0, 0);
+        pca9685PWMWrite(i, 0, 0);
     }
     delay(2000);
 

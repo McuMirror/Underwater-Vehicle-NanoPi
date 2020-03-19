@@ -9,15 +9,17 @@
 #define LOG_TAG "servo"
 
 #include "../easylogger/inc/elog.h"
+#include "../drivers/drv_pca9685.h"
+
 #include "servo.h"
+#include "ioDevices.h"
+#include "propeller.h"
+#include "ret_data.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ioDevices.h"
-#include "propeller.h"
-#include "ret_data.h"
-#include "pwm.h"
+
 
 /*---------------------- Constant / Macro Definitions -----------------------*/
 
@@ -102,7 +104,7 @@ void RoboticArm_Control(uint8 *action)
         break;
     }
     Servo_Output_Limit(&RoboticArm); //机械臂舵机限幅
-    I2C_PWM_SetPWM(10, 0, RoboticArm.CurrentValue);
+    pca9685PWMWrite(10, 0, RoboticArm.CurrentValue);
     *action = 0x00; //清除控制字
 }
 
@@ -156,6 +158,6 @@ void YunTai_Control(uint8 *action)
     }
     Servo_Output_Limit(&YunTai);
     // TODO 云台1还是云台2
-    I2C_PWM_SetPWM(6, 0, YunTai.CurrentValue);
+    pca9685PWMWrite(6, 0, YunTai.CurrentValue);
     *action = 0x00; //清除控制字
 }

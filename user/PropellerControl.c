@@ -8,17 +8,17 @@
 #define LOG_TAG "PropellerControl"
 
 #include "../easylogger/inc/elog.h"
+#include "../drivers/drv_pca9685.h"
+#include "../applications/propeller.h"
+#include "../applications/rc_data.h"
+#include "../applications/PID.h"
+#include "../applications/ret_data.h"
+#include "../applications/sensor.h"
+
 #include "PropellerControl.h"
 #include "Control.h"
 
 #include <math.h>
-
-#include "../applications/propeller.h"
-#include "../applications/rc_data.h"
-#include "../applications/pwm.h"
-#include "../applications/PID.h"
-#include "../applications/ret_data.h"
-#include "../applications/sensor.h"
 
 float Expect_Depth = 0.0f;
 

@@ -9,10 +9,12 @@
 #define LOG_TAG "light"
 
 #include "../easylogger/inc/elog.h"
+#include "../drivers/drv_pca9685.h"
+
 #include "light.h"
 
 #include <stdlib.h>
-#include "pwm.h"
+
 
 short light_value = 0;
 
@@ -50,7 +52,7 @@ void Search_Light_Control(uint8 *action)
         break;
     }
     Light_Output_Limit(&light_value);
-    I2C_PWM_SetPWM(8, 0, light_value);
-    I2C_PWM_SetPWM(9, 0, light_value);
+    pca9685PWMWrite(8, 0, light_value);
+    pca9685PWMWrite(9, 0, light_value);
     *action = 0x00; //清除控制字
 }

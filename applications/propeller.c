@@ -9,13 +9,13 @@
 #define LOG_TAG "propeller"
 
 #include "../easylogger/inc/elog.h"
+#include "../drivers/drv_pca9685.h"
+
 #include "propeller.h"
+#include "rc_data.h"
 
 #include <stdlib.h>
 #include <string.h>
-
-#include "rc_data.h"
-#include "pwm.h"
 
 #include <wiringPi.h>
 
@@ -59,27 +59,27 @@ int Extractor_Value = 0; //吸取器推进器的值
 void Propeller_Init(void) //这边都需要经过限幅在给定  原先为2000->1500
 {
 	// 初始化推进器
-	I2C_PWM_SetPWM(0, 0, PropellerPower_Max); //最高转速信号  水平推进器1号  右上
-	I2C_PWM_SetPWM(5, 0, PropellerPower_Max); //最高转速信号  水平推进器2号  左下
-	I2C_PWM_SetPWM(3, 0, PropellerPower_Max); //最高转速信号  水平推进器3号  左上
-	I2C_PWM_SetPWM(2, 0, PropellerPower_Max); //最高转速信号  水平推进器4号  右下
+	pca9685PWMWrite(0, 0, PropellerPower_Max); //最高转速信号  水平推进器1号  右上
+	pca9685PWMWrite(5, 0, PropellerPower_Max); //最高转速信号  水平推进器2号  左下
+	pca9685PWMWrite(3, 0, PropellerPower_Max); //最高转速信号  水平推进器3号  左上
+	pca9685PWMWrite(2, 0, PropellerPower_Max); //最高转速信号  水平推进器4号  右下
 
-	I2C_PWM_SetPWM(4, 0, PropellerPower_Max); //最高转速信号  垂直推进器1号  左中
-	I2C_PWM_SetPWM(1, 0, PropellerPower_Max); //最高转速信号  垂直推进器2号  右中
+	pca9685PWMWrite(4, 0, PropellerPower_Max); //最高转速信号  垂直推进器1号  左中
+	pca9685PWMWrite(1, 0, PropellerPower_Max); //最高转速信号  垂直推进器2号  右中
 
-	I2C_PWM_SetPWM(10, 0, PropellerPower_Max); //机械臂
+	pca9685PWMWrite(10, 0, PropellerPower_Max); //机械臂
 
 	delay(2000); //2s
 
-	I2C_PWM_SetPWM(0, 0, PropellerPower_Med); //停转信号
-	I2C_PWM_SetPWM(5, 0, PropellerPower_Med); //停转信号
-	I2C_PWM_SetPWM(3, 0, PropellerPower_Med); //停转信号
-	I2C_PWM_SetPWM(2, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(0, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(5, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(3, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(2, 0, PropellerPower_Med); //停转信号
 
-	I2C_PWM_SetPWM(4, 0, PropellerPower_Med); //停转信号
-	I2C_PWM_SetPWM(1, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(4, 0, PropellerPower_Med); //停转信号
+	pca9685PWMWrite(1, 0, PropellerPower_Med); //停转信号
 
-	I2C_PWM_SetPWM(10, 0, PropellerPower_Med); //机械臂
+	pca9685PWMWrite(10, 0, PropellerPower_Med); //机械臂
 
 	// TODO 云台怎么初始化
 	// TIM4_PWM_CH3_D14(1500); //机械臂中值 1000~2000
@@ -104,13 +104,13 @@ void PWM_Update(PropellerPower_Type *propeller)
 	if (1 == Propeller_Init_Flag)
 	{
 
-		I2C_PWM_SetPWM(0, 0, power_test.rightUp);   // 水平推进器1号  右上
-		I2C_PWM_SetPWM(5, 0, power_test.leftDown);  // 水平推进器2号  左下
-		I2C_PWM_SetPWM(3, 0, power_test.leftUp);	// 水平推进器3号  左上
-		I2C_PWM_SetPWM(2, 0, power_test.rightDown); // 水平推进器4号  右下
+		pca9685PWMWrite(0, 0, power_test.rightUp);   // 水平推进器1号  右上
+		pca9685PWMWrite(5, 0, power_test.leftDown);  // 水平推进器2号  左下
+		pca9685PWMWrite(3, 0, power_test.leftUp);	// 水平推进器3号  左上
+		pca9685PWMWrite(2, 0, power_test.rightDown); // 水平推进器4号  右下
 
-		I2C_PWM_SetPWM(4, 0, power_test.leftMiddle);  // 垂直推进器1号  左中
-		I2C_PWM_SetPWM(1, 0, power_test.rightMiddle); // 垂直推进器2号  右中
+		pca9685PWMWrite(4, 0, power_test.leftMiddle);  // 垂直推进器1号  左中
+		pca9685PWMWrite(1, 0, power_test.rightMiddle); // 垂直推进器2号  右中
 	}
 }
 

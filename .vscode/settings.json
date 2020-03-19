@@ -8,7 +8,7 @@
         "sensor.h": "c",
         "datatype.h": "c",
         "propellercontrol.h": "c",
-        "pwm.h": "c",
+        "drv_pca9685.h.h": "c",
         "propeller.h": "c",
         "focus.h": "c",
         "rc_data.h": "c",
