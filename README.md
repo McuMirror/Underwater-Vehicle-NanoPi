@@ -47,8 +47,6 @@ $ sudo npi-config
 ```
 
 若时区不对，也可以在 `npi-config` > `Localisation Options` > `Change Timezone` 中选择修改。
-## 2.3 注意事项
-=======
 
 ## 2.4 注意事项
 
@@ -57,6 +55,7 @@ $ sudo npi-config
 # 3. 进度
 
 - [ ] 模块进度
+  - [ ] USB Camera
   - [x] ADC
     - [x] 电压检测
     - [x] 电流检测
