@@ -8,10 +8,9 @@
 
 #define LOG_TAG "drv_adc"
 
-#include "drv_adc.h"
 #include "../easylogger/inc/elog.h"
-
 #include "../Tools/filter.h"
+#include "drv_ads1118.h"
 
 #include <stdio.h>
 
@@ -24,7 +23,9 @@
 #define FSR (4.096f) // 满量程：正负 4.096 V
 #define LSB (125.0f) // 最低有效位： 125.0 uV
 
-static int adc_fd = 0;
+static int fd = 0;
+static ads1118_t *ads1118;
+static double vref[] = {6.144, 4.096, 2.048, 1.024, 0.512, 0.256};
 
 uint8 i = 0;
 float voltage1 = 0.0f;
@@ -97,16 +98,68 @@ uint16 get_adc0(void)
 
     return (data[0] << 8) + data[1];
 }
+//-------------------------------------------------------------
 
-// 初始化ADC
-int adc_init(void)
+static int16_t ads1118_transmit(uint8_t *data)
 {
-    adc_fd = wiringPiSPISetupMode(1, 1000000, 1); //1MHz
-    if (adc_fd < 0)
-    {
-        log_e("adc_init failed");
+    unsigned char buff[4] = {0};
+
+    buff[0] = data[1];
+    buff[1] = data[0];
+    buff[2] = 0;
+    buff[3] = 0;
+
+    wiringPiSPIDataRW(1, rx_buff, 4);
+
+    return buff[0] << 8 | buff[1]; // SPI传输高位在前
+}
+
+void ads1118_convert_data(uint8 channel)
+{
+    switch (channel) {
+    case 0:
+        ads1118->bits.mux = MUX_S0;
+        break;
+    case 1:
+        ads1118->bits.mux = MUX_S1;
+        break;
+    case 2:
+        ads1118->bits.mux = MUX_S2;
+        break;
+    case 3:
+        ads1118->bits.mux = MUX_S3;
+        break;
+    default:
+        return;
     }
 
-    log_d("adc_fd:%d", adc_fd);
-    return adc_fd;
+    ads1118_transmit((uint8_t *)ads1118);
+}
+
+
+int16_t ads1118_convert(void)
+{
+    return ads1118_transmit((uint8_t *)"\x00\x00");
+}
+
+// 初始化ADC
+int ads1118_init(void)
+{
+    fd = wiringPiSPISetupMode(1, 1000000, 1); //1MHz
+    if (fd < 0)
+    {
+        log_e("ads1118 init failed");
+    }
+    ads1118->bits.ss = SS_NONE;               // 不启动单发转换
+    ads1118->bits.mux = MUX_S0;               // 通道 AIN0
+    ads1118->bits.pga = PGA_2_048;            // 可编程增益放大 ±2.048v
+    ads1118->bits.mode = MODE_CONTINOUS;      // 连续转换模式
+    ads1118->bits.dr = DR_128_SPS;            // 每秒采样率 128
+    ads1118->bits.ts_mode = TS_MODE_ADC;      // ADC 模式
+    ads1118->bits.pull_up_en = PULL_UP_EN_ON; // 数据引脚上拉使能
+    ads1118->bits.nop = NOP_DATA_VALID;       // 有效数据,更新配置寄存器
+    ads1118->bits.reserved = RESERVED_BIT;    // 保留位
+
+    ads1118_transmit((uint8_t *)ads1118); // 修改ads1118 配置寄存器
+    return fd;
 }
